@@ -1,0 +1,107 @@
+package com.andrewjrowell.fly.screens;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.microedition.khronos.opengles.GL10;
+
+import android.util.FloatMath;
+
+import com.andrewjrowell.fly.Assets;
+import com.andrewjrowell.fly.PreAssets;
+import com.andrewjrowell.framework.GLGraphics;
+import com.andrewjrowell.framework.gamedev2d.DynamicGameObject;
+import com.andrewjrowell.framework.gamedev2d.GameObject;
+import com.andrewjrowell.framework.gl.Camera2D;
+import com.andrewjrowell.framework.gl.SpatialHashGrid;
+import com.andrewjrowell.framework.gl.SpriteBatcher;
+import com.andrewjrowell.framework.gl.Texture;
+import com.andrewjrowell.framework.gl.Vertices;
+import com.andrewjrowell.framework.interfaces.Audio;
+import com.andrewjrowell.framework.interfaces.Game;
+import com.andrewjrowell.framework.interfaces.Sound;
+import com.andrewjrowell.framework.interfaces.Input.TouchEvent;
+import com.andrewjrowell.framework.interfaces.Screen;
+import com.andrewjrowell.framework.math.OverlapTester;
+import com.andrewjrowell.framework.math.Rectangle;
+import com.andrewjrowell.framework.math.Vector2;
+import com.andrewjrowell.framework.GLGame;
+
+public class LoadingScreen extends Screen{
+	final float WORLD_WIDTH = 320.0f;
+	final float WORLD_HEIGHT = 480.0f;
+	GLGraphics glGraphics;
+
+	Vector2 touchPos = new Vector2();
+	Camera2D camera;
+	SpriteBatcher batcher;
+	Rectangle nextBounds, textBounds;
+	
+	float offset;
+	
+	
+	float fly_x;
+	
+	boolean loadingStarted = false;
+			
+	public LoadingScreen(Game game) {
+		super(game);
+		glGraphics = ((GLGame)game).getGLGraphics();
+		
+		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
+		batcher = new SpriteBatcher(glGraphics, 500);
+		
+		glGraphics.getGL().glClearColor(1,1,1,1);
+		offset = 0;
+		fly_x = WORLD_WIDTH / 2;
+	}
+	@Override
+	public void update(float deltaTime) {
+		if(!loadingStarted){
+			new Thread(){
+				public void run() { Assets.load((GLGame) game); }
+			}.start();
+			loadingStarted = true;
+		}
+		offset += 32 * deltaTime;
+		if(offset >= 320){
+			offset = 0;
+		}
+		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+		game.getInput().getKeyEvents();
+		if(Assets.isLoaded()){
+			Assets.reload();
+			game.setScreen(new MainScreen(game));
+		}
+	}
+	
+	@Override
+	public void present(float deltaTime) {
+		GL10 gl = glGraphics.getGL();
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		camera.setViewportAndMatrices();
+		
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL10.GL_TEXTURE_2D);
+		batcher.beginBatch(PreAssets.imagemap);
+		
+		batcher.drawLLSprite(0, 0, 320,480, PreAssets.background);
+		batcher.endBatch();
+		gl.glDisable(GL10.GL_BLEND);
+	}
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void resume() {
+		glGraphics.getGL().glClearColor(1,1,1,1);
+	}
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+}
