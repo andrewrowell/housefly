@@ -3,8 +3,6 @@ package com.andrewjrowell.framework.gl;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.FloatMath;
-
 import com.andrewjrowell.framework.gamedev2d.GameObject;
 
 public class SpatialHashGrid {
@@ -18,8 +16,8 @@ public class SpatialHashGrid {
 	
 	public SpatialHashGrid(float worldWidth, float worldHeight, float cellSize){
 		this.cellSize = cellSize;
-		this.cellsPerRow = (int)FloatMath.ceil(worldWidth/cellSize);
-		this.cellsPerCol = (int)FloatMath.ceil(worldHeight/cellSize);
+		this.cellsPerRow = (int)Math.ceil(worldWidth/cellSize);
+		this.cellsPerCol = (int)Math.ceil(worldHeight/cellSize);
 		int numCells = cellsPerRow * cellsPerCol;
 		dynamicCells = new List[numCells];
 		staticCells = new List[numCells];
@@ -89,10 +87,10 @@ public class SpatialHashGrid {
 	}
 	
 	public int[] getCellIds(GameObject obj){
-		int x1 = (int)FloatMath.floor(obj.bounds.lowerLeft.x / cellSize);
-		int y1 = (int)FloatMath.floor(obj.bounds.lowerLeft.y/cellSize);
-		int x2 = (int)FloatMath.floor((obj.bounds.lowerLeft.x + obj.bounds.width) / cellSize);
-		int y2 = (int)FloatMath.floor((obj.bounds.lowerLeft.y + obj.bounds.height) / cellSize);
+		int x1 = (int)Math.floor(obj.bounds.lowerLeft.x / cellSize);
+		int y1 = (int)Math.floor(obj.bounds.lowerLeft.y/cellSize);
+		int x2 = (int)Math.floor((obj.bounds.lowerLeft.x + obj.bounds.width) / cellSize);
+		int y2 = (int)Math.floor((obj.bounds.lowerLeft.y + obj.bounds.height) / cellSize);
 		if(x1 == x2 && y1 == y2){
 			if(x1 >= 0 && x1 < cellsPerRow && y1 >= 0 && y1 < cellsPerCol)
 				cellIds[0] = x1 + y1 * cellsPerRow;
