@@ -1,16 +1,10 @@
 package com.andrewjrowell.fly;
 
-import java.nio.FloatBuffer;
-import java.util.Random;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.andrewjrowell.fly.screens.LoadingScreen;
-import com.andrewjrowell.fly.screens.MainScreen;
 import com.andrewjrowell.framework.GLGame;
-import com.andrewjrowell.framework.GLGraphics;
-import com.andrewjrowell.framework.interfaces.Game;
 import com.andrewjrowell.framework.interfaces.Screen;
 
 public class MainActivity extends GLGame {

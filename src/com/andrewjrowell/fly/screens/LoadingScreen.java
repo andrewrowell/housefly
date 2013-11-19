@@ -1,28 +1,14 @@
 package com.andrewjrowell.fly.screens;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.microedition.khronos.opengles.GL10;
-
-import android.util.FloatMath;
 
 import com.andrewjrowell.fly.Assets;
 import com.andrewjrowell.fly.PreAssets;
 import com.andrewjrowell.framework.GLGraphics;
-import com.andrewjrowell.framework.gamedev2d.DynamicGameObject;
-import com.andrewjrowell.framework.gamedev2d.GameObject;
 import com.andrewjrowell.framework.gl.Camera2D;
-import com.andrewjrowell.framework.gl.SpatialHashGrid;
 import com.andrewjrowell.framework.gl.SpriteBatcher;
-import com.andrewjrowell.framework.gl.Texture;
-import com.andrewjrowell.framework.gl.Vertices;
-import com.andrewjrowell.framework.interfaces.Audio;
 import com.andrewjrowell.framework.interfaces.Game;
-import com.andrewjrowell.framework.interfaces.Sound;
-import com.andrewjrowell.framework.interfaces.Input.TouchEvent;
 import com.andrewjrowell.framework.interfaces.Screen;
-import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 import com.andrewjrowell.framework.GLGame;
@@ -67,7 +53,7 @@ public class LoadingScreen extends Screen{
 		if(offset >= 320){
 			offset = 0;
 		}
-		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+		game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
 		if(Assets.isLoaded()){
 			Assets.reload();
@@ -91,17 +77,11 @@ public class LoadingScreen extends Screen{
 		gl.glDisable(GL10.GL_BLEND);
 	}
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 	@Override
 	public void resume() {
 		glGraphics.getGL().glClearColor(1,1,1,1);
 	}
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void dispose() {}
 }

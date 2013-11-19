@@ -4,8 +4,6 @@ import com.andrewjrowell.framework.GLGame;
 import com.andrewjrowell.framework.gl.Texture;
 import com.andrewjrowell.framework.gl.TextureRegion;
 import com.andrewjrowell.framework.interfaces.Audio;
-import com.andrewjrowell.framework.interfaces.Music;
-import com.andrewjrowell.framework.interfaces.Sound;
 
 public class PreAssets {
 	public static Audio audio;

@@ -1,25 +1,15 @@
 package com.andrewjrowell.fly.screens;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.FloatMath;
-
 import com.andrewjrowell.fly.Assets;
 import com.andrewjrowell.fly.HighScores;
 import com.andrewjrowell.framework.GLGraphics;
-import com.andrewjrowell.framework.gamedev2d.DynamicGameObject;
-import com.andrewjrowell.framework.gamedev2d.GameObject;
 import com.andrewjrowell.framework.gl.Camera2D;
-import com.andrewjrowell.framework.gl.SpatialHashGrid;
 import com.andrewjrowell.framework.gl.SpriteBatcher;
-import com.andrewjrowell.framework.gl.Texture;
-import com.andrewjrowell.framework.gl.Vertices;
-import com.andrewjrowell.framework.interfaces.Audio;
 import com.andrewjrowell.framework.interfaces.Game;
-import com.andrewjrowell.framework.interfaces.Sound;
 import com.andrewjrowell.framework.interfaces.Input.TouchEvent;
 import com.andrewjrowell.framework.interfaces.Screen;
 import com.andrewjrowell.framework.math.OverlapTester;
