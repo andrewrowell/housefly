@@ -3,7 +3,7 @@ package com.andrewjrowell.framework.gamedev2d;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
-public class GameObject {
+public abstract class GameObject {
 	public final Vector2 position;
 	public final Rectangle bounds;
 	

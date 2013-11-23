@@ -2,7 +2,7 @@ package com.andrewjrowell.framework.gamedev2d;
 
 import com.andrewjrowell.framework.math.Vector2;
 
-public class DynamicGameObject extends GameObject {
+public abstract class DynamicGameObject extends GameObject {
 	public final Vector2 velocity;
 	public final Vector2 accel;
 	
