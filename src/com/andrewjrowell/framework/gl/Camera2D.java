@@ -2,7 +2,6 @@ package com.andrewjrowell.framework.gl;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.andrewjrowell.framework.GLGraphics;
 import com.andrewjrowell.framework.math.Vector2;
 
 public class Camera2D {

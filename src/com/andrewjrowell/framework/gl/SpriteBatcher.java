@@ -4,7 +4,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.util.FloatMath;
 
-import com.andrewjrowell.framework.GLGraphics;
 import com.andrewjrowell.framework.math.Vector2;
 
 public class SpriteBatcher {

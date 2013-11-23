@@ -1,11 +1,14 @@
 package com.andrewjrowell.framework;
 
-import com.andrewjrowell.framework.interfaces.Audio;
-import com.andrewjrowell.framework.interfaces.FileIO;
-import com.andrewjrowell.framework.interfaces.Game;
-import com.andrewjrowell.framework.interfaces.Graphics;
-import com.andrewjrowell.framework.interfaces.Input;
-import com.andrewjrowell.framework.interfaces.Screen;
+import com.andrewjrowell.framework.audio.AndroidAudio;
+import com.andrewjrowell.framework.audio.Audio;
+import com.andrewjrowell.framework.diskio.AndroidFileIO;
+import com.andrewjrowell.framework.diskio.FileIO;
+import com.andrewjrowell.framework.graphics.AndroidFastRenderView;
+import com.andrewjrowell.framework.graphics.AndroidGraphics;
+import com.andrewjrowell.framework.graphics.Graphics;
+import com.andrewjrowell.framework.input.AndroidInput;
+import com.andrewjrowell.framework.input.Input;
 
 import android.app.Activity;
 import android.content.Context;

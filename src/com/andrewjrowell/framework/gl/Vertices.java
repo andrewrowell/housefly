@@ -7,7 +7,6 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.andrewjrowell.framework.GLGraphics;
 
 public class Vertices {
 	final GLGraphics glGraphics;

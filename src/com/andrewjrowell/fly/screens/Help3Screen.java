@@ -4,17 +4,17 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.andrewjrowell.fly.Assets;
-import com.andrewjrowell.framework.GLGraphics;
+import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.framework.Game;
+import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.gl.Camera2D;
+import com.andrewjrowell.framework.gl.GLGame;
+import com.andrewjrowell.framework.gl.GLGraphics;
 import com.andrewjrowell.framework.gl.SpriteBatcher;
-import com.andrewjrowell.framework.interfaces.Game;
-import com.andrewjrowell.framework.interfaces.Input.TouchEvent;
-import com.andrewjrowell.framework.interfaces.Screen;
+import com.andrewjrowell.framework.input.Input.TouchEvent;
 import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
-import com.andrewjrowell.framework.GLGame;
 
 public class Help3Screen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
@@ -62,7 +62,7 @@ public class Help3Screen extends Screen{
 						
 			if(event.type == TouchEvent.TOUCH_UP){
 				if(OverlapTester.pointInRectangle(nextBounds, touchPos)){
-					Assets.click.play(1.0f);
+					MainAssets.click.play(1.0f);
 					game.setScreen(new MainScreen(game));
 				}
 			}
@@ -87,37 +87,37 @@ public class Help3Screen extends Screen{
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
-		batcher.beginBatch(Assets.imagemap);
+		batcher.beginBatch(MainAssets.imagemap);
 		
 		for(int j = 0; j < 4; j++){
-			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, Assets.background);
+			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
 		}
 		
 		batcher.drawLLSprite((int) nextBounds.lowerLeft.x,(int) nextBounds.lowerLeft.y,
-				(int)nextBounds.width,(int) nextBounds.height, Assets.white);
+				(int)nextBounds.width,(int) nextBounds.height, MainAssets.white);
 		batcher.drawLLSprite((int) textBounds.lowerLeft.x,(int) textBounds.lowerLeft.y,
-				(int)textBounds.width,(int) textBounds.height, Assets.white);
+				(int)textBounds.width,(int) textBounds.height, MainAssets.white);
 		
-		batcher.drawLLSprite(88, 384, TEXTX, TEXTY, Assets.E);
-		batcher.drawLLSprite(88 + TEXTX, 384, TEXTX, TEXTY, Assets.A);
-		batcher.drawLLSprite(88 + 2 * TEXTX, 384, TEXTX, TEXTY, Assets.T);
+		batcher.drawLLSprite(88, 384, TEXTX, TEXTY, MainAssets.E);
+		batcher.drawLLSprite(88 + TEXTX, 384, TEXTX, TEXTY, MainAssets.A);
+		batcher.drawLLSprite(88 + 2 * TEXTX, 384, TEXTX, TEXTY, MainAssets.T);
 		
 		if(food_y > 192 + 32){
-			batcher.drawSprite(160,food_y,32,32,Assets.rotten1);
-			batcher.drawSprite(160,192,32,32,Assets.fly);
+			batcher.drawSprite(160,food_y,32,32,MainAssets.rotten1);
+			batcher.drawSprite(160,192,32,32,MainAssets.fly);
 		} else {
 			batcher.drawLLSprite((int) textBounds2.lowerLeft.x,(int) textBounds2.lowerLeft.y,
-					(int)textBounds2.width,(int) textBounds2.height, Assets.white);
-			batcher.drawLLSprite(64, 96, TEXTX, TEXTY, Assets.G);
-			batcher.drawLLSprite(64 + TEXTX, 96, TEXTX, TEXTY, Assets.R);
-			batcher.drawLLSprite(64 + 2 * TEXTX, 96, TEXTX, TEXTY, Assets.O);
-			batcher.drawLLSprite(64 + 3 * TEXTX, 96, TEXTX, TEXTY, Assets.W);
+					(int)textBounds2.width,(int) textBounds2.height, MainAssets.white);
+			batcher.drawLLSprite(64, 96, TEXTX, TEXTY, MainAssets.G);
+			batcher.drawLLSprite(64 + TEXTX, 96, TEXTX, TEXTY, MainAssets.R);
+			batcher.drawLLSprite(64 + 2 * TEXTX, 96, TEXTX, TEXTY, MainAssets.O);
+			batcher.drawLLSprite(64 + 3 * TEXTX, 96, TEXTX, TEXTY, MainAssets.W);
 			batcher.drawSprite(160,192,32 + (32 * (3 - resetcountdown) / 3),
-					32 + (32 * (3 - resetcountdown) / 3),Assets.fly);
+					32 + (32 * (3 - resetcountdown) / 3),MainAssets.fly);
 		}
 		//batcher.drawSprite(160,192,64,64,Assets.fly);
 		
-		batcher.drawLLSprite(96, 0, 128, 64, Assets.arrow);
+		batcher.drawLLSprite(96, 0, 128, 64, MainAssets.arrow);
 		
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);

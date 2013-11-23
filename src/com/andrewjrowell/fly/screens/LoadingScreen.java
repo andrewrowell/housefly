@@ -2,16 +2,16 @@ package com.andrewjrowell.fly.screens;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.andrewjrowell.fly.Assets;
-import com.andrewjrowell.fly.PreAssets;
-import com.andrewjrowell.framework.GLGraphics;
+import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.fly.assets.PreAssets;
+import com.andrewjrowell.framework.Game;
+import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.gl.Camera2D;
+import com.andrewjrowell.framework.gl.GLGame;
+import com.andrewjrowell.framework.gl.GLGraphics;
 import com.andrewjrowell.framework.gl.SpriteBatcher;
-import com.andrewjrowell.framework.interfaces.Game;
-import com.andrewjrowell.framework.interfaces.Screen;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
-import com.andrewjrowell.framework.GLGame;
 
 public class LoadingScreen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
@@ -45,7 +45,7 @@ public class LoadingScreen extends Screen{
 	public void update(float deltaTime) {
 		if(!loadingStarted){
 			new Thread(){
-				public void run() { Assets.load((GLGame) game); }
+				public void run() { MainAssets.load((GLGame) game); }
 			}.start();
 			loadingStarted = true;
 		}
@@ -55,8 +55,8 @@ public class LoadingScreen extends Screen{
 		}
 		game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
-		if(Assets.isLoaded()){
-			Assets.reload();
+		if(MainAssets.isLoaded()){
+			MainAssets.reload();
 			game.setScreen(new MainScreen(game));
 		}
 	}

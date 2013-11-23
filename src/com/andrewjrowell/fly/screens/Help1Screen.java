@@ -4,17 +4,17 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.andrewjrowell.fly.Assets;
-import com.andrewjrowell.framework.GLGraphics;
+import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.framework.Game;
+import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.gl.Camera2D;
+import com.andrewjrowell.framework.gl.GLGame;
+import com.andrewjrowell.framework.gl.GLGraphics;
 import com.andrewjrowell.framework.gl.SpriteBatcher;
-import com.andrewjrowell.framework.interfaces.Game;
-import com.andrewjrowell.framework.interfaces.Input.TouchEvent;
-import com.andrewjrowell.framework.interfaces.Screen;
+import com.andrewjrowell.framework.input.Input.TouchEvent;
 import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
-import com.andrewjrowell.framework.GLGame;
 
 public class Help1Screen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
@@ -57,12 +57,12 @@ public class Help1Screen extends Screen{
 		if(fly_x >= WORLD_WIDTH && tiltright == true){
 			fly_x = WORLD_WIDTH - 1;
 			tiltright = false;
-			Assets.tiltleft.play(1.0f);
+			MainAssets.tiltleft.play(1.0f);
 		}
 		if(fly_x <= 0 && tiltright == false){
 			fly_x = 1;
 			tiltright = true;
-			Assets.tiltright.play(1.0f);
+			MainAssets.tiltright.play(1.0f);
 		}
 		if(tiltright){
 			fly_x += 64 * deltaTime;
@@ -81,7 +81,7 @@ public class Help1Screen extends Screen{
 						
 			if(event.type == TouchEvent.TOUCH_UP){
 				if(OverlapTester.pointInRectangle(nextBounds, touchPos)){
-					Assets.click.play(1.0f);
+					MainAssets.click.play(1.0f);
 					game.setScreen(new Help2Screen(game));
 				}
 			}
@@ -97,31 +97,31 @@ public class Help1Screen extends Screen{
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
-		batcher.beginBatch(Assets.imagemap);
+		batcher.beginBatch(MainAssets.imagemap);
 		
 		for(int j = 0; j < 4; j++){
-			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, Assets.background);
+			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
 		}
 		
 		batcher.drawLLSprite((int) nextBounds.lowerLeft.x,(int) nextBounds.lowerLeft.y,
-				(int)nextBounds.width,(int) nextBounds.height, Assets.white);
+				(int)nextBounds.width,(int) nextBounds.height, MainAssets.white);
 		batcher.drawLLSprite((int) textBounds.lowerLeft.x,(int) textBounds.lowerLeft.y,
-				(int)textBounds.width,(int) textBounds.height, Assets.white);
+				(int)textBounds.width,(int) textBounds.height, MainAssets.white);
 		
-		batcher.drawLLSprite(64, 384, TEXTX, TEXTY, Assets.T);
-		batcher.drawLLSprite(64 + TEXTX, 384, TEXTX, TEXTY, Assets.I);
-		batcher.drawLLSprite(64 + 2 * TEXTX, 384, TEXTX, TEXTY, Assets.L);
-		batcher.drawLLSprite(64 + 3 * TEXTX, 384, TEXTX, TEXTY, Assets.T);
+		batcher.drawLLSprite(64, 384, TEXTX, TEXTY, MainAssets.T);
+		batcher.drawLLSprite(64 + TEXTX, 384, TEXTX, TEXTY, MainAssets.I);
+		batcher.drawLLSprite(64 + 2 * TEXTX, 384, TEXTX, TEXTY, MainAssets.L);
+		batcher.drawLLSprite(64 + 3 * TEXTX, 384, TEXTX, TEXTY, MainAssets.T);
 		
-		batcher.drawLLSprite(96, 0, 128, 64, Assets.arrow);
+		batcher.drawLLSprite(96, 0, 128, 64, MainAssets.arrow);
 		
 		if(tiltright == true){
-			batcher.drawSprite(160, 256, 128, 192, 350, Assets.phone);
+			batcher.drawSprite(160, 256, 128, 192, 350, MainAssets.phone);
 		} else {
-			batcher.drawSprite(160, 256, 128, 192, 10, Assets.phone);
+			batcher.drawSprite(160, 256, 128, 192, 10, MainAssets.phone);
 		}
 		
-		batcher.drawSprite(fly_x, 96, 64, 64, Assets.fly);
+		batcher.drawSprite(fly_x, 96, 64, 64, MainAssets.fly);
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);
 	}

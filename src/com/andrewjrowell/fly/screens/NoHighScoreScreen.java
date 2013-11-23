@@ -4,17 +4,17 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.andrewjrowell.fly.Assets;
-import com.andrewjrowell.framework.GLGraphics;
+import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.framework.Game;
+import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.gl.Camera2D;
+import com.andrewjrowell.framework.gl.GLGame;
+import com.andrewjrowell.framework.gl.GLGraphics;
 import com.andrewjrowell.framework.gl.SpriteBatcher;
-import com.andrewjrowell.framework.interfaces.Game;
-import com.andrewjrowell.framework.interfaces.Input.TouchEvent;
-import com.andrewjrowell.framework.interfaces.Screen;
+import com.andrewjrowell.framework.input.Input.TouchEvent;
 import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
-import com.andrewjrowell.framework.GLGame;
 
 public class NoHighScoreScreen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
@@ -45,7 +45,7 @@ public class NoHighScoreScreen extends Screen{
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
-		Assets.minorchord.play(1.0f);
+		MainAssets.minorchord.play(1.0f);
 	}
 	@Override
 	public void update(float deltaTime) {
@@ -65,11 +65,11 @@ public class NoHighScoreScreen extends Screen{
 						
 			if(event.type == TouchEvent.TOUCH_UP){
 				if(OverlapTester.pointInRectangle(noBounds, touchPos)){
-					Assets.click.play(1.0f);
+					MainAssets.click.play(1.0f);
 					game.setScreen(new MainScreen(game));
 				}
 				if(OverlapTester.pointInRectangle(yesBounds, touchPos)){
-					Assets.click.play(1.0f);
+					MainAssets.click.play(1.0f);
 					game.setScreen(new GamePlayScreen(game));
 				}
 			}
@@ -85,49 +85,49 @@ public class NoHighScoreScreen extends Screen{
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
-		batcher.beginBatch(Assets.imagemap);
+		batcher.beginBatch(MainAssets.imagemap);
 		
 		for(int j = 0; j < 4; j++){
-			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, Assets.background);
+			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
 		}
 		
 		batcher.drawLLSprite((int) noHighScoreBounds.lowerLeft.x,(int) noHighScoreBounds.lowerLeft.y,
-				(int)noHighScoreBounds.width,(int) noHighScoreBounds.height, Assets.white);
+				(int)noHighScoreBounds.width,(int) noHighScoreBounds.height, MainAssets.white);
 		batcher.drawLLSprite((int) tryAgainBounds.lowerLeft.x,(int) tryAgainBounds.lowerLeft.y,
-				(int)tryAgainBounds.width,(int) tryAgainBounds.height, Assets.white);
+				(int)tryAgainBounds.width,(int) tryAgainBounds.height, MainAssets.white);
 		batcher.drawLLSprite((int) yesBounds.lowerLeft.x,(int) yesBounds.lowerLeft.y,
-				(int)yesBounds.width,(int) yesBounds.height, Assets.white);
+				(int)yesBounds.width,(int) yesBounds.height, MainAssets.white);
 		batcher.drawLLSprite((int) noBounds.lowerLeft.x,(int) noBounds.lowerLeft.y,
-				(int)noBounds.width,(int) noBounds.height, Assets.white);
+				(int)noBounds.width,(int) noBounds.height, MainAssets.white);
 		
-		batcher.drawLLSprite(0, 0, TEXTX, TEXTY, Assets.Y);
-		batcher.drawLLSprite(0 + TEXTX, 0, TEXTX, TEXTY, Assets.E);
-		batcher.drawLLSprite(0 + 2 * TEXTX, 0, TEXTX, TEXTY, Assets.S);
+		batcher.drawLLSprite(0, 0, TEXTX, TEXTY, MainAssets.Y);
+		batcher.drawLLSprite(0 + TEXTX, 0, TEXTX, TEXTY, MainAssets.E);
+		batcher.drawLLSprite(0 + 2 * TEXTX, 0, TEXTX, TEXTY, MainAssets.S);
 		
-		batcher.drawLLSprite(224, 0, TEXTX, TEXTY, Assets.N);
-		batcher.drawLLSprite(224 + TEXTX, 0, TEXTX, TEXTY, Assets.O);
+		batcher.drawLLSprite(224, 0, TEXTX, TEXTY, MainAssets.N);
+		batcher.drawLLSprite(224 + TEXTX, 0, TEXTX, TEXTY, MainAssets.O);
 		
-		batcher.drawLLSprite(112, 384, TEXTX, TEXTY, Assets.N);
-		batcher.drawLLSprite(112 + TEXTX, 384, TEXTX, TEXTY, Assets.O);
-		batcher.drawLLSprite(64, 320, TEXTX, TEXTY, Assets.H);
-		batcher.drawLLSprite(64 + TEXTX, 320, TEXTX, TEXTY, Assets.I);
-		batcher.drawLLSprite(64 + 2 * TEXTX, 320, TEXTX, TEXTY, Assets.G);
-		batcher.drawLLSprite(64 + 3 * TEXTX, 320, TEXTX, TEXTY, Assets.H);
-		batcher.drawLLSprite(40, 256, TEXTX, TEXTY, Assets.S);
-		batcher.drawLLSprite(40 + TEXTX, 256, TEXTX, TEXTY, Assets.C);
-		batcher.drawLLSprite(40 + 2 * TEXTX, 256, TEXTX, TEXTY, Assets.O);
-		batcher.drawLLSprite(40 + 3 * TEXTX, 256, TEXTX, TEXTY, Assets.R);
-		batcher.drawLLSprite(40 + 4 * TEXTX, 256, TEXTX, TEXTY, Assets.E);
+		batcher.drawLLSprite(112, 384, TEXTX, TEXTY, MainAssets.N);
+		batcher.drawLLSprite(112 + TEXTX, 384, TEXTX, TEXTY, MainAssets.O);
+		batcher.drawLLSprite(64, 320, TEXTX, TEXTY, MainAssets.H);
+		batcher.drawLLSprite(64 + TEXTX, 320, TEXTX, TEXTY, MainAssets.I);
+		batcher.drawLLSprite(64 + 2 * TEXTX, 320, TEXTX, TEXTY, MainAssets.G);
+		batcher.drawLLSprite(64 + 3 * TEXTX, 320, TEXTX, TEXTY, MainAssets.H);
+		batcher.drawLLSprite(40, 256, TEXTX, TEXTY, MainAssets.S);
+		batcher.drawLLSprite(40 + TEXTX, 256, TEXTX, TEXTY, MainAssets.C);
+		batcher.drawLLSprite(40 + 2 * TEXTX, 256, TEXTX, TEXTY, MainAssets.O);
+		batcher.drawLLSprite(40 + 3 * TEXTX, 256, TEXTX, TEXTY, MainAssets.R);
+		batcher.drawLLSprite(40 + 4 * TEXTX, 256, TEXTX, TEXTY, MainAssets.E);
 		
-		batcher.drawLLSprite(88, 160, TEXTX, TEXTY, Assets.T);
-		batcher.drawLLSprite(88 + TEXTX, 160, TEXTX, TEXTY, Assets.R);
-		batcher.drawLLSprite(88 + 2 * TEXTX, 160, TEXTX, TEXTY, Assets.Y);
-		batcher.drawLLSprite(16, 96, TEXTX, TEXTY, Assets.A);
-		batcher.drawLLSprite(16 + TEXTX, 96, TEXTX, TEXTY, Assets.G);
-		batcher.drawLLSprite(16 + 2 * TEXTX, 96, TEXTX, TEXTY, Assets.A);
-		batcher.drawLLSprite(16 + 3 * TEXTX, 96, TEXTX, TEXTY, Assets.I);
-		batcher.drawLLSprite(16 + 4 * TEXTX, 96, TEXTX, TEXTY, Assets.N);
-		batcher.drawLLSprite(16 + 5 * TEXTX, 96, TEXTX, TEXTY, Assets.QUESTION_MARK);
+		batcher.drawLLSprite(88, 160, TEXTX, TEXTY, MainAssets.T);
+		batcher.drawLLSprite(88 + TEXTX, 160, TEXTX, TEXTY, MainAssets.R);
+		batcher.drawLLSprite(88 + 2 * TEXTX, 160, TEXTX, TEXTY, MainAssets.Y);
+		batcher.drawLLSprite(16, 96, TEXTX, TEXTY, MainAssets.A);
+		batcher.drawLLSprite(16 + TEXTX, 96, TEXTX, TEXTY, MainAssets.G);
+		batcher.drawLLSprite(16 + 2 * TEXTX, 96, TEXTX, TEXTY, MainAssets.A);
+		batcher.drawLLSprite(16 + 3 * TEXTX, 96, TEXTX, TEXTY, MainAssets.I);
+		batcher.drawLLSprite(16 + 4 * TEXTX, 96, TEXTX, TEXTY, MainAssets.N);
+		batcher.drawLLSprite(16 + 5 * TEXTX, 96, TEXTX, TEXTY, MainAssets.QUESTION_MARK);
 				
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);

@@ -9,9 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
-import com.andrewjrowell.framework.interfaces.FileIO;
-import com.andrewjrowell.framework.GLGame;
-import com.andrewjrowell.framework.GLGraphics;
+import com.andrewjrowell.framework.diskio.FileIO;
 
 public class Texture {
   GLGraphics glGraphics;

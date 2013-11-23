@@ -3,7 +3,7 @@ package com.andrewjrowell.framework.gl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.andrewjrowell.framework.gamedev2d.GameObject;
+import com.andrewjrowell.framework.game2d.GameObject;
 
 public class SpatialHashGrid {
 	List<GameObject>[] dynamicCells;

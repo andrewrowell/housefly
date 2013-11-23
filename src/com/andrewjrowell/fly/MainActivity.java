@@ -3,9 +3,11 @@ package com.andrewjrowell.fly;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.fly.assets.PreAssets;
 import com.andrewjrowell.fly.screens.LoadingScreen;
-import com.andrewjrowell.framework.GLGame;
-import com.andrewjrowell.framework.interfaces.Screen;
+import com.andrewjrowell.framework.Screen;
+import com.andrewjrowell.framework.gl.GLGame;
 
 public class MainActivity extends GLGame {
 	boolean firstTimeCreate = true;
@@ -21,7 +23,7 @@ public class MainActivity extends GLGame {
 			PreAssets.load(this);
 			firstTimeCreate = false;
 		} else {
-			Assets.reload();
+			MainAssets.reload();
 		}
 	}
 }
