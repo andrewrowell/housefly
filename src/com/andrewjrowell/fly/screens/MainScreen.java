@@ -16,18 +16,32 @@ import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
+/**
+ * <p>Main menu screen<p>
+ * 
+ * <p>Displays four options: Play, View High Scores, Help, or Quit</p>
+ * 
+ * <p>Player can start a game, look at the top scores, open
+ * the help screens, or quit the game from here.</p>
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+*/
+
 public class MainScreen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
 	final float WORLD_HEIGHT = 480.0f;
-	final static int TEXTX = 48;
-	final static int TEXTY = 64;
+	final static int TEXTX = 48; // Width of bitmap font 
+	final static int TEXTY = 64; // Height of bitmap font
 	GLGraphics glGraphics;
 
-	Vector2 touchPos = new Vector2();
+	Vector2 touchPos = new Vector2(); // Stores the position last touched
 	Camera2D camera;
 	SpriteBatcher batcher;
 	Rectangle playBounds, highScoresBounds, helpBounds, quitBounds;
 	
+	// How much we need to shift the background to give the
+	// appearance of constantly scrolling grass
 	float offset;
 			
 	public MainScreen(Game game) {
@@ -44,10 +58,18 @@ public class MainScreen extends Screen{
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
 	}
+	
+	/**
+	 * <p>Update status of various elements of the MainScreen</p>
+	 * 
+	 * @param deltaTime time since last update()
+	 */
 	@Override
 	public void update(float deltaTime) {
 		MainAssets.menumusic.play();
 		MainAssets.menumusic.setLooping(true);
+		
+		// Shift background
 		offset += 32 * deltaTime;
 		if(offset >= 320){
 			offset = 0;
@@ -55,6 +77,7 @@ public class MainScreen extends Screen{
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
 		
+		// See if the player touched a button
 		int len = touchEvents.size();
 		for(int i = 0; i < len; i++){
 			TouchEvent event = touchEvents.get(i);
@@ -84,6 +107,12 @@ public class MainScreen extends Screen{
 		}
 	}
 	
+	
+	/**
+	 * <p>Render various elements of MainScreen</p> 
+	 * 
+	 * @param deltaTime time since last present()
+	 */
 	@Override
 	public void present(float deltaTime) {
 		GL10 gl = glGraphics.getGL();
@@ -99,6 +128,7 @@ public class MainScreen extends Screen{
 			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
 		}
 		
+		// Draw button backgrounds
 		batcher.drawLLSprite((int) playBounds.lowerLeft.x,(int) playBounds.lowerLeft.y,
 				(int)playBounds.width,(int) playBounds.height, MainAssets.white);
 		batcher.drawLLSprite((int) highScoresBounds.lowerLeft.x,(int) highScoresBounds.lowerLeft.y,
@@ -108,21 +138,25 @@ public class MainScreen extends Screen{
 		batcher.drawLLSprite((int) quitBounds.lowerLeft.x,(int) quitBounds.lowerLeft.y,
 				(int)quitBounds.width,(int) quitBounds.height, MainAssets.white);
 		
+		// Draw Quit text
 		batcher.drawLLSprite(64, 32, TEXTX, TEXTY, MainAssets.Q);
 		batcher.drawLLSprite(64 + TEXTX, 32, TEXTX, TEXTY, MainAssets.U);
 		batcher.drawLLSprite(64 + 2 * TEXTX, 32, TEXTX, TEXTY, MainAssets.I);
 		batcher.drawLLSprite(64 + 3 * TEXTX, 32, TEXTX, TEXTY, MainAssets.T);
 		
+		// Draw Play text
 		batcher.drawLLSprite(64, 384, TEXTX, TEXTY, MainAssets.P);
 		batcher.drawLLSprite(64 + TEXTX, 384, TEXTX, TEXTY, MainAssets.L);
 		batcher.drawLLSprite(64 + 2 * TEXTX, 384, TEXTX, TEXTY, MainAssets.A);
 		batcher.drawLLSprite(64 + 3 * TEXTX, 384, TEXTX, TEXTY, MainAssets.Y);
 		
+		// Draw Help text
 		batcher.drawLLSprite(64, 128, TEXTX, TEXTY, MainAssets.H);
 		batcher.drawLLSprite(64 + TEXTX, 128, TEXTX, TEXTY, MainAssets.E);
 		batcher.drawLLSprite(64 + 2 * TEXTX, 128, TEXTX, TEXTY, MainAssets.L);
 		batcher.drawLLSprite(64 + 3 * TEXTX, 128, TEXTX, TEXTY, MainAssets.P);
 		
+		// Draw High Scores text
 		batcher.drawLLSprite(64, 288, TEXTX, TEXTY, MainAssets.H);
 		batcher.drawLLSprite(64 + TEXTX, 288, TEXTX, TEXTY, MainAssets.I);
 		batcher.drawLLSprite(64 + 2 * TEXTX, 288, TEXTX, TEXTY, MainAssets.G);

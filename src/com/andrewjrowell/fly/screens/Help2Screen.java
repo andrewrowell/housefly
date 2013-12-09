@@ -16,21 +16,37 @@ import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
+/**
+ * <p> Second help screen, player gets here from the {@link Help1Screen}.</p>
+ * 
+ * <p> Displays a horizontally scrolling list of predators that the player
+ * must avoid.</p>
+ * 
+ * <p> Player can move on to the next help screen ({@link Help2Screen}) by
+ * clicking on an arrow button at the bottom of the screen.</p>
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+ */
+
+
 public class Help2Screen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
 	final float WORLD_HEIGHT = 480.0f;
-	final static int TEXTX = 48;
-	final static int TEXTY = 64;
+	final static int TEXTX = 48; // Width of the bitmap font
+	final static int TEXTY = 64; // Height of the bitmap font
 	GLGraphics glGraphics;
 
-	Vector2 touchPos = new Vector2();
+	Vector2 touchPos = new Vector2(); // Stores the position last touched
 	Camera2D camera;
 	SpriteBatcher batcher;
 	Rectangle nextBounds, textBounds;
 	
+	// How much we need to shift the background to give the
+	// appearance of constantly scrolling grass
 	float offset;
 	
-	float spider_x, lizard_x, duck_x;
+	float spider_x, lizard_x, duck_x; // X positions of predators being displayed
 			
 	public Help2Screen(Game game) {
 		super(game);
@@ -43,19 +59,33 @@ public class Help2Screen extends Screen{
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
-		spider_x = WORLD_WIDTH;
-		lizard_x = spider_x + WORLD_WIDTH / 2;
-		duck_x = spider_x + WORLD_WIDTH;
+		
+		// This next section makes the creatures scroll in from the right side,
+		// one at a time
+		spider_x = WORLD_WIDTH; // Put spider on right edge of world
+		lizard_x = spider_x + WORLD_WIDTH / 2; // Put lizard a bit further to
+											   // the right off screen
+		//TODO rename lizard to bat
+		duck_x = spider_x + WORLD_WIDTH; // Put duck even further to the right
 	}
+	
+	/** update status of various elements of the Help2Screen
+	 * 
+	 * @param deltaTime time since last update()
+	 */
 	@Override
 	public void update(float deltaTime) {
+		
+		// Shift Background
 		offset += 32 * deltaTime;
 		if(offset >= 320){
 			offset = 0;
 		}
+		
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
 		
+		// See if player touched the "next screen" button
 		int len = touchEvents.size();
 		for(int i = 0; i < len; i++){
 			TouchEvent event = touchEvents.get(i);
@@ -69,9 +99,14 @@ public class Help2Screen extends Screen{
 				}
 			}
 		}
+		
+		// Shift predators
 		spider_x -= 64 * deltaTime;
 		lizard_x -= 64 * deltaTime;
 		duck_x -= 64 * deltaTime;
+		
+		// If a predator has gone off of the screen,
+		// put them on the other side
 		if(spider_x < -96){
 			spider_x = WORLD_WIDTH + 96;
 		}
@@ -83,6 +118,11 @@ public class Help2Screen extends Screen{
 		}
 	}
 	
+	/** 
+	 * <p>Render various elements of Help2Screen</p>
+	 * 
+	 * @param deltaTime time since last present()
+	 */
 	@Override
 	public void present(float deltaTime) {
 		GL10 gl = glGraphics.getGL();
@@ -94,6 +134,7 @@ public class Help2Screen extends Screen{
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		batcher.beginBatch(MainAssets.imagemap);
 		
+		// Draw the background
 		for(int j = 0; j < 4; j++){
 			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
 		}

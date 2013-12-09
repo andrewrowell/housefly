@@ -5,6 +5,16 @@ import com.andrewjrowell.framework.gl.GLGame;
 import com.andrewjrowell.framework.gl.Texture;
 import com.andrewjrowell.framework.gl.TextureRegion;
 
+/**
+ * <p>Special set of assets that are as small as possible
+ * to allow a splashscreen to be displayed while the rest of
+ * the game's assets are loaded</p>
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+*/
+
+
 public class PreAssets {
 	public static Audio audio;
 	public static Texture imagemap;

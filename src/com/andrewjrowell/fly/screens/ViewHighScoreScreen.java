@@ -16,23 +16,28 @@ import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
+/**
+ * <p>Displays the high scores to the player.</p>
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+*/
+
 public class ViewHighScoreScreen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
 	final float WORLD_HEIGHT = 480.0f;
-	final static int TEXTX = 48;
-	final static int TEXTY = 64;
+	final static int TEXTX = 48; // Width of bitmap font
+	final static int TEXTY = 64; // Height of bitmap font
 	GLGraphics glGraphics;
 
-	Vector2 touchPos = new Vector2();
+	Vector2 touchPos = new Vector2(); // Stores the position last touched
 	Camera2D camera;
 	SpriteBatcher batcher;
 	Rectangle nextBounds, textBounds, scoreBounds, nameBounds;
 	
+	// How much we need to shift the background to give the
+	// appearance of constantly scrolling grass
 	float offset;
-	
-	boolean tiltright = true;
-	
-	float fly_x;
 			
 	public ViewHighScoreScreen(Game game) {
 		super(game);
@@ -49,8 +54,17 @@ public class ViewHighScoreScreen extends Screen{
 		offset = 0;
 		HighScores.load(game.getFileIO());
 	}
+	
+	/**
+	 * <p>Update status of various elements of the
+	 * ViewHighScoreScreen.</p>
+	 * 
+	 * @param deltaTime time since last update()
+	 */
 	@Override
 	public void update(float deltaTime) {
+		
+		// Shift Background
 		offset += 32 * deltaTime;
 		if(offset >= 320){
 			offset = 0;
@@ -59,6 +73,7 @@ public class ViewHighScoreScreen extends Screen{
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
 		
+		// See if player touched button to return to MainScreen
 		int len = touchEvents.size();
 		for(int i = 0; i < len; i++){
 			TouchEvent event = touchEvents.get(i);
@@ -74,6 +89,11 @@ public class ViewHighScoreScreen extends Screen{
 		}
 	}
 	
+	/**
+	 * <p>Render various elements of ViewHighScoreScreen</p>
+	 * 
+	 * @param deltaTime time since last present()
+	 */
 	@Override
 	public void present(float deltaTime) {
 		GL10 gl = glGraphics.getGL();
@@ -118,7 +138,13 @@ public class ViewHighScoreScreen extends Screen{
 		gl.glDisable(GL10.GL_BLEND);
 	}
 	
-
+	/**
+	 * <p>Renders a high score</p>
+	 * 
+	 * @param scoreindex which score to draw
+	 * @param x X position to draw it at
+	 * @param y Y position to draw it at
+	 */
 	private void drawScore(int scoreindex, int x, int y){
 		int tscore = HighScores.scores[scoreindex];
 		int digit1 = (int) Math.floor(tscore / 10000);
@@ -140,6 +166,13 @@ public class ViewHighScoreScreen extends Screen{
 		//draw name
 	}
 	
+	/**
+	 * <p>Renders individual digits</p>
+	 * 
+	 * @param x X position of digit
+	 * @param y Y position of digit
+	 * @param digit digit between 0 and 9
+	 */
 	private void drawDigit(int x, int y, int digit){
 		switch(digit){
 		case 1: batcher.drawLLSprite(x, y, 32, 32, MainAssets.one); break;
@@ -155,12 +188,25 @@ public class ViewHighScoreScreen extends Screen{
 		}
 	}
 	
+	/**
+	 * <p>Renders initials</p>
+	 * 
+	 * @param x X position to render initials
+	 * @param y Y position to render initials
+	 * @param name three initials to draw
+	 */
 	private void drawName(int x, int y, String name){
 		drawChar(x, y, name.charAt(0));
 		drawChar(x + 32, y, name.charAt(1));
 		drawChar(x + 64, y, name.charAt(2));
 	}
 	
+	/**
+	 * <p>renders individual characters</p>
+	 * @param x X position to render character
+	 * @param y Y position to render character
+	 * @param c character to render
+	 */
 	private void drawChar(int x, int y, char c){
 		switch(c){
 		case 'A': batcher.drawLLSprite(x, y, 32, 32, MainAssets.a); break;

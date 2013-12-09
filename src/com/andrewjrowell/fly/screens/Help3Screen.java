@@ -16,19 +16,45 @@ import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
+/**
+ * <p> Third help screen, player gets here from the {@link Help2Screen}.</p>
+ * 
+ * <p> Displays a rotten moving down towards a stationary demo fly, and
+ * then disappearing once it goes underneath the fly (to represent the
+ * fly eating it). Then, the fly grows, to show that eating the rottens
+ * is a good thing.</p>
+ * 
+ * <p> Player can move on to the main menu ({@link MainScreen}) by
+ * clicking on an arrow button at the bottom of the screen.</p>
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+ */
+
 public class Help3Screen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
 	final float WORLD_HEIGHT = 480.0f;
-	final static int TEXTX = 48;
-	final static int TEXTY = 64;
+	final static int TEXTX = 48; // Width of bitmap font
+	final static int TEXTY = 64; // Height of bitmap font
 	GLGraphics glGraphics;
 
-	Vector2 touchPos = new Vector2();
+	Vector2 touchPos = new Vector2(); // Stores the position last touched
 	Camera2D camera;
 	SpriteBatcher batcher;
 	Rectangle nextBounds, textBounds, textBounds2;
 	
-	float offset, food_y, resetcountdown;
+	// How much we need to shift the background to give the
+	// appearance of constantly scrolling grass
+	float offset;
+	
+	// Y value of the rotten's position
+	float food_y;
+	
+	// Counter to reset the rotten to original position and
+	// show the fly-eating-rotten animation all over again
+	// ---
+	// Is a float because resetcountdown's unit is seconds
+	float resetcountdown;
 			
 	public Help3Screen(Game game) {
 		super(game);
@@ -43,17 +69,26 @@ public class Help3Screen extends Screen{
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
 		food_y = 320;
-		resetcountdown = 3;
+		resetcountdown = 3; // 3 seconds
 	}
+	
+	/** update status of various elements of the Help3Screen
+	 * 
+	 * @param deltaTime time since last update()
+	 */
 	@Override
 	public void update(float deltaTime) {
+		
+		// Shift Background
 		offset += 32 * deltaTime;
 		if(offset >= 320){
 			offset = 0;
 		}
+		
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
 		
+		// See if player touched the "next screen" button
 		int len = touchEvents.size();
 		for(int i = 0; i < len; i++){
 			TouchEvent event = touchEvents.get(i);
@@ -67,17 +102,33 @@ public class Help3Screen extends Screen{
 				}
 			}
 		}
+		
+		// Shift the rotten
 		food_y -= 32 * deltaTime;
+		
+		// If the rotten has moved down to the fly's position
+		// Don't move it any further, and subtract from the
+		// countdown timer.
 		if(food_y <= 192){
 			food_y = 192;
 			resetcountdown -= deltaTime;
 		}
+		
+		// If countdown has reached zero, reset the rotten to
+		// its original position and reset the timer
 		if(resetcountdown <= 0){
 			food_y = 320;
 			resetcountdown = 3;
+			//TODO use a constant/static variable for resetting
 		}
 	}
 	
+	
+	/** 
+	 * <p>Render various elements of Help3Screen</p>
+	 * 
+	 * @param deltaTime time since last present()
+	 */
 	@Override
 	public void present(float deltaTime) {
 		GL10 gl = glGraphics.getGL();
@@ -102,6 +153,7 @@ public class Help3Screen extends Screen{
 		batcher.drawLLSprite(88 + TEXTX, 384, TEXTX, TEXTY, MainAssets.A);
 		batcher.drawLLSprite(88 + 2 * TEXTX, 384, TEXTX, TEXTY, MainAssets.T);
 		
+		// Don't draw the rotten if it has reached the fly
 		if(food_y > 192 + 32){
 			batcher.drawSprite(160,food_y,32,32,MainAssets.rotten1);
 			batcher.drawSprite(160,192,32,32,MainAssets.fly);
@@ -115,7 +167,6 @@ public class Help3Screen extends Screen{
 			batcher.drawSprite(160,192,32 + (32 * (3 - resetcountdown) / 3),
 					32 + (32 * (3 - resetcountdown) / 3),MainAssets.fly);
 		}
-		//batcher.drawSprite(160,192,64,64,Assets.fly);
 		
 		batcher.drawLLSprite(96, 0, 128, 64, MainAssets.arrow);
 		

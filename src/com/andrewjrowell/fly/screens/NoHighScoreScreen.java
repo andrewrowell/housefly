@@ -16,21 +16,28 @@ import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
+/**
+ * <p>Tells the player that they did not earn a high score<p>
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+*/
+
 public class NoHighScoreScreen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
 	final float WORLD_HEIGHT = 480.0f;
-	final static int TEXTX = 48;
-	final static int TEXTY = 64;
+	final static int TEXTX = 48; // Width of bitmap font
+	final static int TEXTY = 64; // Height of bitmap font
 	GLGraphics glGraphics;
 
-	Vector2 touchPos = new Vector2();
+	Vector2 touchPos = new Vector2(); // Stores the position last touched
 	Camera2D camera;
 	SpriteBatcher batcher;
 	Rectangle noHighScoreBounds, tryAgainBounds, yesBounds, noBounds;
 	
+	// How much we need to shift the background to give the
+	// appearance of constantly scrolling grass
 	float offset;
-	
-	boolean tiltright = true;
 				
 	public NoHighScoreScreen(Game game) {
 		super(game);
@@ -47,6 +54,13 @@ public class NoHighScoreScreen extends Screen{
 		offset = 0;
 		MainAssets.minorchord.play(1.0f);
 	}
+	
+	
+	/**
+	 * <p>Update various elements of the NoHighScoreScreen</p>
+	 * 
+	 * @param deltaTime time since last update()
+	 */
 	@Override
 	public void update(float deltaTime) {
 		offset += 32 * deltaTime;
@@ -76,6 +90,11 @@ public class NoHighScoreScreen extends Screen{
 		}
 	}
 	
+	/**
+	 * <p>Render various elements of NoHighScoreScreen</p>
+	 * 
+	 * @param deltaTime time since last present()
+	 */
 	@Override
 	public void present(float deltaTime) {
 		GL10 gl = glGraphics.getGL();

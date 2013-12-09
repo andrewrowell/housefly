@@ -13,6 +13,18 @@ import com.andrewjrowell.framework.gl.SpriteBatcher;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
+/**
+ * <p> Displays a splashscreen from a special Pre-Asset file that
+ * is small enough to load almost instantly, while the rest of the
+ * game's assets are loaded.<p>
+ * 
+ * <p> Added on to the framework design from Beginning Android
+ * Games by Mario Zechner. </p>
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+*/
+
 public class LoadingScreen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
 	final float WORLD_HEIGHT = 480.0f;
@@ -22,11 +34,6 @@ public class LoadingScreen extends Screen{
 	Camera2D camera;
 	SpriteBatcher batcher;
 	Rectangle nextBounds, textBounds;
-	
-	float offset;
-	
-	
-	float fly_x;
 	
 	boolean loadingStarted = false;
 			
@@ -38,9 +45,15 @@ public class LoadingScreen extends Screen{
 		batcher = new SpriteBatcher(glGraphics, 500);
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
-		offset = 0;
-		fly_x = WORLD_WIDTH / 2;
 	}
+	
+	
+	/**
+	 * <p>Waits for main assets to load before
+	 * changing to MainScreen</p>
+	 * 
+	 * @param deltaTime time since last update()
+	 */
 	@Override
 	public void update(float deltaTime) {
 		if(!loadingStarted){
@@ -48,10 +61,6 @@ public class LoadingScreen extends Screen{
 				public void run() { MainAssets.load((GLGame) game); }
 			}.start();
 			loadingStarted = true;
-		}
-		offset += 32 * deltaTime;
-		if(offset >= 320){
-			offset = 0;
 		}
 		game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
@@ -61,6 +70,12 @@ public class LoadingScreen extends Screen{
 		}
 	}
 	
+	
+	/**
+	 * <p>Renders the splashscreen from PreAssets</p>
+	 * 
+	 * @param deltaTime time since last present
+	 */
 	@Override
 	public void present(float deltaTime) {
 		GL10 gl = glGraphics.getGL();

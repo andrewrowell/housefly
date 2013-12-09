@@ -7,6 +7,16 @@ import com.andrewjrowell.framework.gl.GLGame;
 import com.andrewjrowell.framework.gl.Texture;
 import com.andrewjrowell.framework.gl.TextureRegion;
 
+/**
+ * <p>Comprehensive static list of the Assets that will be
+ * needed for the rest of the game</p>
+ * 
+ * @author Mario Zechner
+ * @author Andrew Rowell
+ * @version 1.0
+*/
+
+
 public class MainAssets {
 	static boolean loaded = false;
 	
@@ -142,7 +152,14 @@ public class MainAssets {
 	public static Music speed;
 	public static Sound crunch;
 	
-	
+	/**
+	 * <p>Calls the loading methods particular to each type of asset</p>
+	 * @param game the {@link GLGame} which has the {@link AndroidAudio}
+	 * which load() uses to load audio files.</p>
+	 * 
+	 * <p>This separates the listing of audio files from the code that
+	 * loads them.</p>
+	 */
 	public static void load(GLGame game){
 		loaded = false;
 		audio = game.getAudio();
@@ -279,14 +296,28 @@ public class MainAssets {
 		 loaded = true;
 	}
 	
+	/**
+	 * <p>Checks if the assets have been loaded yet</p>
+	 * @return true if load() has been called
+	 */
 	public static boolean isLoaded(){
 		return loaded;
 	}
 	
+	/**
+	 * <p>Reloads any {@link Texture}s used by OpenGL</p>
+	 * <p>Called when the player exits the game other than using the quit
+	 * button in the menu, so the game can be resumed</p>
+	 */
 	public static void reload(){
 		imagemap.reload();
 	}
 	
+	/**
+	 * <p>Reloads audio files after resuming from outside the app</p>
+	 * <p>Called when the player exits the game other than using the quit
+	 * button in the menu, so the game can be resumed</p>
+	 */
 	public static void reloadAudio(){
 		click = audio.newSound("click.wav");
 		slurp = audio.newSound("slurp.wav");
@@ -301,6 +332,10 @@ public class MainAssets {
 		crunch = audio.newSound("crunch.wav");
 	}
 
+	//TODO Fix this hack
+	/**
+	 *<p> Hackish way of resetting the powerup music. Needs to be fixed</p> 
+	 */
 	public static void reloadSpeedSound() {
 		speed = audio.newMusic("speedsound.wav");
 	}

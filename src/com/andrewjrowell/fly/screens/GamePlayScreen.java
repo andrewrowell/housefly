@@ -22,30 +22,49 @@ import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
+/**
+ * <p> {@link Screen} with gameplay </p>
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+ */
+
+
 public class GamePlayScreen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
 	final float WORLD_HEIGHT = 480.0f;
-	final static int TEXTX = 48;
-	final static int TEXTY = 64;
+	final static int TEXTX = 48; // Width of bitmap font
+	final static int TEXTY = 64; // Height of bitmap font
 	GLGraphics glGraphics;
 
-	Vector2 touchPos = new Vector2();
+	Vector2 touchPos = new Vector2(); // Stores the position last touched
 	Camera2D camera;
 	SpriteBatcher batcher;
-	ArrayList<Rotten> rottens;
+	ArrayList<Rotten> rottens; // Fly food
 	ArrayList<Predator> predators;
 	ArrayList<Powerup> powerups;
 	
-	float offset, rottencounter, predatorcounter, powerupcounter, predfreq;
+	// How much we need to shift the background to give the
+	// appearance of constantly scrolling grass
+	float offset;
+	
+	// Countdowns for various types of entities to appear
+	float rottencounter, predatorcounter, powerupcounter;
+	
+	// Frequency of predators spawning
+	float predfreq;
 	
 	float score;
 	
-	float flyPos;
+	float flyPos; // X position of fly
 	int flySize;
 	
-	boolean buzzing;
+	boolean buzzing; // Should buzz sound be playing?
 	
+	// What kind of powerup is currently active
 	int powerupState;
+	
+	// Time until powerup expires
 	float powerupTimeLeft;
 			
 	public GamePlayScreen(Game game) {
@@ -62,33 +81,46 @@ public class GamePlayScreen extends Screen{
 		powerups = new ArrayList<Powerup>();
 		rottencounter = 0;
 		powerupcounter = 20;
-		flyPos = WORLD_WIDTH / 2;
-		flySize = 16;
+		flyPos = WORLD_WIDTH / 2; // Center fly
+		flySize = 16; // Start with a small fly
 		buzzing = false;
 		score = 0;
 		predatorcounter = 0;
 		predfreq = 3;
-		powerupState = 0;
+		powerupState = 0; // No powerup currently active
 		powerupTimeLeft = 0;
 		
 		HighScores.load(game.getFileIO());
 		MainAssets.introchords.play(1.0f);
 	}
+	
+	
+	/**
+	 * <p>Update various elements of the GamePlayScreen</p>
+	 * 
+	 * @param deltaTime time since last update()
+	 */
 	@Override
 	public void update(float deltaTime) {
+		// How fast we move forwards
 		int pace;
+		
 		if(powerupState == Powerup.POWERUP_ID_SPEED){
 			pace = 128;
 		} else {
 			pace = 48;
 		}
+		
+		//Move background
 		offset += pace * deltaTime;
 		if(offset >= 320){
 			offset = 0;
 		}
+		
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
 		
+		// Process touch input
 		int len = touchEvents.size();
 		for(int i = 0; i < len; i++){
 			TouchEvent event = touchEvents.get(i);
@@ -99,6 +131,8 @@ public class GamePlayScreen extends Screen{
 				
 			}
 		}
+		
+		// Spawn a rotten every 10 seconds
 		rottencounter += deltaTime * (pace/32.0);
 		if(rottencounter >= 9){
 			rottens.add(new Rotten(WORLD_WIDTH, WORLD_HEIGHT));
@@ -126,6 +160,7 @@ public class GamePlayScreen extends Screen{
 		rottens = rottens2;
 		
 
+		// Spawn predator if it's time for one
 		predatorcounter += deltaTime * (pace/32.0);
 		if(predatorcounter >= 6){
 			Predator newPred = new Predator(WORLD_WIDTH, WORLD_HEIGHT);
@@ -200,6 +235,7 @@ public class GamePlayScreen extends Screen{
 		powerups = powerups2;
 		
 		
+		// Move fly if phone is tilted
 		if(Math.abs(game.getInput().getAccelX()) > 0.5){
 			flyPos -= (int) (game.getInput().getAccelX() * deltaTime * 32 * 2);
 			if(!buzzing && Math.abs(game.getInput().getAccelX()) > 3){
@@ -210,6 +246,7 @@ public class GamePlayScreen extends Screen{
 			buzzing = false;
 		}
 		
+		// Don't let fly go off screen
 		if(flyPos <= 0){
 			flyPos = 0;
 		}
@@ -217,13 +254,16 @@ public class GamePlayScreen extends Screen{
 			flyPos = WORLD_WIDTH;
 		}
 		
+		// Increase score
 		score += deltaTime;
 		
+		// Decrease powerup time
 		powerupTimeLeft -= deltaTime;
 		if(powerupTimeLeft <= 0){
 			powerupState = 0;
 		}
 		
+		// Spawn a powerup every 30 seconds
 		powerupcounter += deltaTime;
 		if(powerupcounter >= 30){
 			Powerup pu = new Powerup(WORLD_WIDTH, WORLD_HEIGHT);
@@ -232,6 +272,11 @@ public class GamePlayScreen extends Screen{
 		}
 	}
 	
+	/**
+	 * <p>Draw the various elements of the GamePlayScreen</p>
+	 * 
+	 * @param deltaTime time since last present()
+	 */
 	@Override
 	public void present(float deltaTime) {
 		GL10 gl = glGraphics.getGL();
@@ -243,12 +288,14 @@ public class GamePlayScreen extends Screen{
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		batcher.beginBatch(MainAssets.imagemap);
 		
+		// Draw background
 		for(int j = 0; j < 4; j++){
 			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
 		}
-		
+		// Draw the fly
 		batcher.drawSprite(flyPos, 64 + flySize, flySize, flySize, MainAssets.fly);
 		
+		// Draw rottens
 		for(Rotten r : rottens){
 			switch(r.type){
 			case 1: batcher.drawSprite(r.x, r.y, 32, 32, MainAssets.rotten1); break;
@@ -269,6 +316,8 @@ public class GamePlayScreen extends Screen{
 			case 16: batcher.drawSprite(r.x, r.y, 32, 32, MainAssets.rotten16); break;
 			}
 		}
+		
+		// Draw predators
 		for(Predator p : predators){
 			switch(p.type){
 			case 1: batcher.drawSprite(p.x, p.y, 64, 64, MainAssets.spider); break;
@@ -277,12 +326,14 @@ public class GamePlayScreen extends Screen{
 			}
 		}
 		
+		// Draw powerups
 		for(Powerup p : powerups){
 			switch(p.type){
 			case Powerup.POWERUP_ID_SPEED: batcher.drawSprite(p.x, p.y, 32, 32, MainAssets.speedpowerup); break;
 			}
 		}
 		
+		// Draw score
 		batcher.drawLLSprite(0, 0, 32 * 5, 32, MainAssets.widered);
 		batcher.drawLLSprite(32 * 5, 0, (int) WORLD_WIDTH - (32 * 5), 32, MainAssets.widewhite);
 		batcher.drawLLSprite(0,0,32,32,MainAssets.s);
@@ -368,7 +419,7 @@ public class GamePlayScreen extends Screen{
 		case 0: batcher.drawLLSprite(288, 0, 32, 32, MainAssets.zero); break;
 		}
 		
-		//Powerup Bar
+		//Draw Powerup Bar
 		if(powerupState != 0){
 			batcher.drawLLSprite(0, (int) (WORLD_HEIGHT - 32), (int) WORLD_WIDTH, 32, MainAssets.widered);
 			batcher.drawLLSprite((int) (WORLD_WIDTH * (powerupTimeLeft / Powerup.POWERUP_DURATION)) , (int) (WORLD_HEIGHT - 32.0),

@@ -17,25 +17,48 @@ import com.andrewjrowell.framework.math.OverlapTester;
 import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
+/**
+ * <p>{@link Screen} that the player enters the high scores
+ * in, player gets here from the {@link GamePlayScreen}</p>
+ * 
+ * <p>Like a classic arcade high score screen, lets the player
+ * enter three letters to be stored in a list of high scores</p> 
+ * 
+ * @author Andrew Rowell
+ * @version 1.0
+ */
+
+
 public class EnterHighScoreScreen extends Screen{
 	final float WORLD_WIDTH = 320.0f;
 	final float WORLD_HEIGHT = 480.0f;
-	final static int TEXTX = 48;
-	final static int TEXTY = 64;
+	final static int TEXTX = 48; // Width of the bitmap font
+	final static int TEXTY = 64; // Height of the bitmap font
 	GLGraphics glGraphics;
 
-	Vector2 touchPos = new Vector2();
+	Vector2 touchPos = new Vector2(); // Stores the position last touched
 	Camera2D camera;
 	SpriteBatcher batcher;
 	Rectangle nextBounds, textBounds, nameBounds, scoreBounds, uparrow1bounds,
 		uparrow2bounds, uparrow3bounds, downarrow1bounds, downarrow2bounds,
 		downarrow3bounds;
 	
-	float offset;
+	
+	// How much we need to shift the background to give the appearance
+	// of constantly scrolling grass
+	float offset; 
 		
+	// Score earned in the game that was just finished
 	int score;
 			
+	// Name that the player is entering
 	String name;
+	
+	/**
+	 * 
+	 * @param game {@link Game} object passed from previous screen 
+	 * @param score Score earned by player in GamePlayScreen
+	 */
 	public EnterHighScoreScreen(Game game, int score) {
 		super(game);
 		this.score = score;
@@ -58,9 +81,15 @@ public class EnterHighScoreScreen extends Screen{
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
 		name = "AAA";
+		
+		// Psychological reward for player getting high score
 		MainAssets.majorchord.play(1.0f);
 	}
-	@Override
+	
+	/** update status of various elements of the EnterHighScoreScreen 
+	 * 
+	 * @param deltaTime time since last update()
+	 */
 	public void update(float deltaTime) {
 		offset += 32 * deltaTime;
 		if(offset >= 320){
@@ -123,6 +152,12 @@ public class EnterHighScoreScreen extends Screen{
 		}
 	}
 	
+	
+	/**
+	 * <p>Render various elements of EnterHighScoreScreen</p>
+	 * 
+	 * @param deltaTime time since last present()
+	 */
 	@Override
 	public void present(float deltaTime) {
 		GL10 gl = glGraphics.getGL();
@@ -134,6 +169,7 @@ public class EnterHighScoreScreen extends Screen{
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		batcher.beginBatch(MainAssets.imagemap);
 		
+		//Draw the background
 		for(int j = 0; j < 4; j++){
 			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
 		}
@@ -175,6 +211,14 @@ public class EnterHighScoreScreen extends Screen{
 		gl.glDisable(GL10.GL_BLEND);
 	}
 	
+	
+	/** <p> Called by present() to draw the score earned in the
+	 * game the player just finished</p>
+	 * 
+	 * @param score score to be rendered
+	 * @param x x position of score
+	 * @param y y position of score
+	 */
 	private void drawScore(int score, int x, int y){
 		int tscore = score;
 		int digit1 = (int) Math.floor(tscore / 10000);
@@ -194,6 +238,12 @@ public class EnterHighScoreScreen extends Screen{
 		drawDigit(x + 48 * 4,y,digit5);
 	}
 	
+	/**	<p>Draws individual digits for drawScore()</p> 
+	 * 
+	 * @param x x position to draw digit
+	 * @param y y position to draw digit
+	 * @param digit single digit number to be drawn
+	 */
 	private void drawDigit(int x, int y, int digit){
 		switch(digit){
 		case 1: batcher.drawLLSprite(x, y, 48, 64, MainAssets.ONE); break;
@@ -208,13 +258,25 @@ public class EnterHighScoreScreen extends Screen{
 		case 0: batcher.drawLLSprite(x, y, 48, 64, MainAssets.ZERO); break;
 		}
 	}
-	
+
+	/** <p>Called by present() to draw player's initials</p>
+	 * 
+	 * @param x x position of name
+	 * @param y y position of name
+	 * @param name initials to be drawn. Expects 3 characters.
+	 */
 	private void drawName(int x, int y, String name){
 		drawChar(x, y, name.charAt(0));
 		drawChar(x + 48, y, name.charAt(1));
 		drawChar(x + 96, y, name.charAt(2));
 	}
 	
+	/** <p>Called by drawName() to draw individual characters
+	 * 
+	 * @param x x position of character
+	 * @param y y position of character
+	 * @param c character
+	 */
 	private void drawChar(int x, int y, char c){
 		switch(c){
 		case 'A': batcher.drawLLSprite(x, y, 48, 64, MainAssets.A); break;
@@ -246,6 +308,13 @@ public class EnterHighScoreScreen extends Screen{
 		}
 	}
 	
+	/** <p>Finds the character before the one given.</p>
+	 *   
+	 * <p>Used when player presses up arrow above a letter in the name input.</p>
+	 * 
+	 * @param c character to be shifted
+	 * @return character before the one inputted
+	 */
 	private char upChar(char c){
 		switch(c){
 		case 'A': return 'Z';
@@ -278,6 +347,13 @@ public class EnterHighScoreScreen extends Screen{
 		return 'A';
 	}
 	
+	/** <p>Finds the character after the one given.</p>
+	 *   
+	 * <p>Used when player presses down arrow below a letter in the name input.</p>
+	 * 
+	 * @param c character to be shifted
+	 * @return character after the one inputted
+	 */
 	private char downChar(char c){
 		switch(c){
 		case 'A': return 'B';
