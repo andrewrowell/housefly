@@ -170,18 +170,15 @@ public class Help1Screen extends Screen{
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);
 	}
+	
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
+	
 	@Override
 	public void resume() {
 		glGraphics.getGL().glClearColor(1,1,1,1);
 	}
+	
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void dispose() {}
 }

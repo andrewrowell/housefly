@@ -237,18 +237,15 @@ public class ViewHighScoreScreen extends Screen{
 		case 'Z': batcher.drawLLSprite(x, y, 32, 32, MainAssets.z); break;
 		}
 	}
+	
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
+	
 	@Override
 	public void resume() {
 		glGraphics.getGL().glClearColor(1,1,1,1);
 	}
+	
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void dispose() {}
 }

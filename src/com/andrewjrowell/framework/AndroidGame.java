@@ -115,7 +115,6 @@ public abstract class AndroidGame extends Activity implements Game {
 
 	@Override
 	public Screen getStartScreen() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
