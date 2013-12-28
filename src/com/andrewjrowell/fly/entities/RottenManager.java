@@ -37,7 +37,10 @@ public class RottenManager {
 	 * @param pace speed modifier
 	 */
 	public void update(float deltaTime, int pace){
-		rottencounter += deltaTime * pace;
+		rottencounter += deltaTime * pace / 48;
+		// Divide by 48 so at normal pace, counter
+		// represents time in seconds
+		
 		if(rottencounter >= 5){
 			rottens.add(new Rotten(WORLD_WIDTH, WORLD_HEIGHT));
 			rottencounter = 0;

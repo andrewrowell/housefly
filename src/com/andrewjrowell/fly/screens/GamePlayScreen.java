@@ -73,6 +73,7 @@ public class GamePlayScreen extends Screen{
 		offset = 0;
 		powerups = new ArrayList<Powerup>();
 		rottens = new RottenManager(WORLD_WIDTH,WORLD_HEIGHT);
+		predators = new PredatorManager(WORLD_WIDTH,WORLD_HEIGHT);
 		powerupcounter = 20;
 		fly = new PlayerFly(WORLD_WIDTH);
 		score = 0;
@@ -95,9 +96,9 @@ public class GamePlayScreen extends Screen{
 		int pace;
 		
 		if(powerupState == Powerup.POWERUP_ID_SPEED){
-			pace = 4;
+			pace = 128;
 		} else {
-			pace = 2;
+			pace = 48;
 		}
 		
 		//Move background
@@ -122,7 +123,7 @@ public class GamePlayScreen extends Screen{
 		// Check to see how many rottens were eaten
 		score += 10 * rottens.eaten(fly);
 
-		// Spawn predator if it's time for one
+		// update predators
 		predators.update(deltaTime, pace);
 		// Check for collisions with predators
 		if(predators.collisionCheck(fly)){
