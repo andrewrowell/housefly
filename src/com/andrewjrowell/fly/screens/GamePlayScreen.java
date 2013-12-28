@@ -9,6 +9,7 @@ import com.andrewjrowell.fly.assets.MainAssets;
 import com.andrewjrowell.fly.entities.PlayerFly;
 import com.andrewjrowell.fly.entities.Powerup;
 import com.andrewjrowell.fly.entities.Predator;
+import com.andrewjrowell.fly.entities.PredatorManager;
 import com.andrewjrowell.fly.entities.Rotten;
 import com.andrewjrowell.fly.entities.RottenManager;
 import com.andrewjrowell.framework.Game;
@@ -42,7 +43,7 @@ public class GamePlayScreen extends Screen{
 	Camera2D camera;
 	SpriteBatcher batcher;
 	RottenManager rottens; // Food
-	ArrayList<Predator> predators;
+	PredatorManager predators;
 	ArrayList<Powerup> powerups;
 	PlayerFly fly;
 	
@@ -51,10 +52,7 @@ public class GamePlayScreen extends Screen{
 	float offset;
 	
 	// Countdowns for various types of entities to appear
-	float predatorcounter, powerupcounter;
-	
-	// Frequency of predators spawning
-	float predfreq;
+	float powerupcounter;
 	
 	float score;
 	
@@ -73,14 +71,11 @@ public class GamePlayScreen extends Screen{
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
-		predators = new ArrayList<Predator>();
 		powerups = new ArrayList<Powerup>();
 		rottens = new RottenManager(WORLD_WIDTH,WORLD_HEIGHT);
 		powerupcounter = 20;
 		fly = new PlayerFly(WORLD_WIDTH);
 		score = 0;
-		predatorcounter = 0;
-		predfreq = 3;
 		powerupState = 0; // No powerup currently active
 		powerupTimeLeft = 0;
 		
@@ -100,9 +95,9 @@ public class GamePlayScreen extends Screen{
 		int pace;
 		
 		if(powerupState == Powerup.POWERUP_ID_SPEED){
-			pace = 128;
+			pace = 4;
 		} else {
-			pace = 48;
+			pace = 2;
 		}
 		
 		//Move background
@@ -130,53 +125,17 @@ public class GamePlayScreen extends Screen{
 		score += 10 * rottens.eaten(fly);
 
 		// Spawn predator if it's time for one
-		predatorcounter += deltaTime * (pace/32.0);
-		if(predatorcounter >= 6){
-			Predator newPred = new Predator(WORLD_WIDTH, WORLD_HEIGHT);
-			predators.add(newPred);
-			predatorcounter = 3 - predfreq;
-			predfreq *= 0.9;
-		}
-		
-		for(Predator p : predators){
-			p.update(deltaTime, pace);
-		}
-				
-		for(Predator p : predators){
-			if(p.type == 1 && OverlapTester.overlapCircleRectangle(
-					new Circle(p.x, p.y, 28),
-					fly.getBounds())){
-				MainAssets.speed.stop();
-				MainAssets.crunch.play(1.0f);
-				if(HighScores.isHighScore((int) score)){
-					game.setScreen(new EnterHighScoreScreen(game, (int) score));
-				} else {
-					game.setScreen(new NoHighScoreScreen(game));
-				}
+		predators.update(deltaTime, pace);
+		// Check for collisions with predators
+		if(predators.collisionCheck(fly)){
+			MainAssets.speed.stop();
+			MainAssets.crunch.play(1.0f);
+			if(HighScores.isHighScore((int) score)){
+				game.setScreen(new EnterHighScoreScreen(game, (int) score));
+			} else {
+				game.setScreen(new NoHighScoreScreen(game));
 			}
-			if(p.type == 2 && OverlapTester.overlapCircleRectangle(
-					new Circle(p.x, p.y, 56),
-					fly.getBounds())){
-				MainAssets.speed.stop();
-				MainAssets.crunch.play(1.0f);
-				if(HighScores.isHighScore((int) score)){
-					game.setScreen(new EnterHighScoreScreen(game, (int) score));
-				} else {
-					game.setScreen(new NoHighScoreScreen(game));
-				}
-			}
-			if(p.type == 3 && OverlapTester.overlapCircleRectangle(
-					new Circle(p.x, p.y, 84),
-					fly.getBounds())){
-				MainAssets.speed.stop();
-				MainAssets.crunch.play(1.0f);
-				if(HighScores.isHighScore((int) score)){
-					game.setScreen(new EnterHighScoreScreen(game, (int) score));
-				} else {
-					game.setScreen(new NoHighScoreScreen(game));
-				}
-			}
-		}
+		}		
 		
 		ArrayList<Powerup> powerups2 = new ArrayList<Powerup>();
 		for(Powerup p : powerups){
@@ -272,7 +231,7 @@ public class GamePlayScreen extends Screen{
 		}
 		
 		// Draw predators
-		for(Predator p : predators){
+		for(Predator p : predators.getPredators()){
 			switch(p.type){
 			case 1: batcher.drawSprite(p.x, p.y, 64, 64, MainAssets.spider); break;
 			case 2: batcher.drawSprite(p.x, p.y, 128, 128, MainAssets.lizard); break;

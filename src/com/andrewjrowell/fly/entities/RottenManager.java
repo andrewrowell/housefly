@@ -30,7 +30,8 @@ public class RottenManager {
 	}
 	
 	/**
-	 * <p>updates the positions of the rottens and adds a new one if necessary</p>
+	 * <p>updates the positions of the rottens and adds a
+	 * new one if necessary</p>
 	 * 
 	 * @param deltaTime time since last update
 	 * @param pace speed modifier
@@ -48,9 +49,10 @@ public class RottenManager {
 	}
 	
 	/**
-	 * does a bounds check to see if the fly has hit any rottens
+	 * <p>Does a bounds check to see if the fly has hit
+	 * any rottens</p>
 	 * 
-	 * @param fly
+	 * @param fly Player's Fly
 	 * @return number of rottens eaten
 	 */
 	public int eaten(PlayerFly fly){
