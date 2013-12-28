@@ -92,8 +92,8 @@ public class GamePlayScreen extends Screen{
 	 */
 	@Override
 	public void update(float deltaTime) {
-		// How fast we move forwards
-		int pace;
+		int pace; // How fast we move forwards
+		// in pixels per second
 		
 		if(powerupState == Powerup.POWERUP_ID_SPEED){
 			pace = 128;
