@@ -113,15 +113,13 @@ public class GamePlayScreen extends Screen{
 		int len = touchEvents.size();
 		for(int i = 0; i < len; i++){
 			TouchEvent event = touchEvents.get(i);
-			
 			camera.touchToWorld(touchPos.set(event.x, event.y));
-						
-			if(event.type == TouchEvent.TOUCH_UP){
-				
-			}
+			if(event.type == TouchEvent.TOUCH_UP){}
 		}
 		
+		// Update the rottens
 		rottens.update(deltaTime, pace);
+		// Check to see how many rottens were eaten
 		score += 10 * rottens.eaten(fly);
 
 		// Spawn predator if it's time for one
