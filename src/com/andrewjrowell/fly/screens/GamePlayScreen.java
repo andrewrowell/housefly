@@ -6,6 +6,7 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.fly.entities.PlayerFly;
 import com.andrewjrowell.fly.entities.Powerup;
 import com.andrewjrowell.fly.entities.Predator;
 import com.andrewjrowell.fly.entities.Rotten;
@@ -43,6 +44,7 @@ public class GamePlayScreen extends Screen{
 	ArrayList<Rotten> rottens; // Fly food
 	ArrayList<Predator> predators;
 	ArrayList<Powerup> powerups;
+	PlayerFly fly;
 	
 	// How much we need to shift the background to give the
 	// appearance of constantly scrolling grass
@@ -55,11 +57,6 @@ public class GamePlayScreen extends Screen{
 	float predfreq;
 	
 	float score;
-	
-	float flyPos; // X position of fly
-	int flySize;
-	
-	boolean buzzing; // Should buzz sound be playing?
 	
 	// What kind of powerup is currently active
 	int powerupState;
@@ -81,9 +78,7 @@ public class GamePlayScreen extends Screen{
 		powerups = new ArrayList<Powerup>();
 		rottencounter = 0;
 		powerupcounter = 20;
-		flyPos = WORLD_WIDTH / 2; // Center fly
-		flySize = 16; // Start with a small fly
-		buzzing = false;
+		fly = new PlayerFly(WORLD_WIDTH);
 		score = 0;
 		predatorcounter = 0;
 		predfreq = 3;
@@ -147,10 +142,10 @@ public class GamePlayScreen extends Screen{
 		
 		for(Rotten r : rottens){
 			if(OverlapTester.overlapRectangles(
-					new Rectangle(flyPos - (flySize/2),64 + (flySize/2),flySize, flySize),
+					fly.getBounds(),
 					new Rectangle(r.x - 16, r.y - 16, 32, 32))){
 				r.eaten = true;
-				flySize++;
+				fly.grow();
 				MainAssets.slurp.play(1.0f);
 				score += 10;
 			} else {
@@ -176,7 +171,7 @@ public class GamePlayScreen extends Screen{
 		for(Predator p : predators){
 			if(p.type == 1 && OverlapTester.overlapCircleRectangle(
 					new Circle(p.x, p.y, 28),
-					new Rectangle(flyPos - (flySize/2),64 + (flySize/2),flySize, flySize))){
+					fly.getBounds())){
 				MainAssets.speed.stop();
 				MainAssets.crunch.play(1.0f);
 				if(HighScores.isHighScore((int) score)){
@@ -187,7 +182,7 @@ public class GamePlayScreen extends Screen{
 			}
 			if(p.type == 2 && OverlapTester.overlapCircleRectangle(
 					new Circle(p.x, p.y, 56),
-					new Rectangle(flyPos - (flySize/2),64 + (flySize/2),flySize, flySize))){
+					fly.getBounds())){
 				MainAssets.speed.stop();
 				MainAssets.crunch.play(1.0f);
 				if(HighScores.isHighScore((int) score)){
@@ -198,7 +193,7 @@ public class GamePlayScreen extends Screen{
 			}
 			if(p.type == 3 && OverlapTester.overlapCircleRectangle(
 					new Circle(p.x, p.y, 84),
-					new Rectangle(flyPos - (flySize/2),64 + (flySize/2),flySize, flySize))){
+					fly.getBounds())){
 				MainAssets.speed.stop();
 				MainAssets.crunch.play(1.0f);
 				if(HighScores.isHighScore((int) score)){
@@ -217,7 +212,7 @@ public class GamePlayScreen extends Screen{
 		for(Powerup p : powerups){
 			if(p.type == 1 && OverlapTester.overlapCircleRectangle(
 					new Circle(p.x, p.y, 28),
-					new Rectangle(flyPos - (flySize/2),64 + (flySize/2),flySize, flySize))){
+					fly.getBounds())){
 				powerupState = Powerup.POWERUP_ID_SPEED;
 				powerupTimeLeft = Powerup.POWERUP_DURATION;
 				MainAssets.reloadSpeedSound();
@@ -234,25 +229,8 @@ public class GamePlayScreen extends Screen{
 		
 		powerups = powerups2;
 		
-		
-		// Move fly if phone is tilted
-		if(Math.abs(game.getInput().getAccelX()) > 0.5){
-			flyPos -= (int) (game.getInput().getAccelX() * deltaTime * 32 * 2);
-			if(!buzzing && Math.abs(game.getInput().getAccelX()) > 3){
-				MainAssets.buzz.play(1.0f);
-				buzzing = true;
-			}
-		} else {
-			buzzing = false;
-		}
-		
-		// Don't let fly go off screen
-		if(flyPos <= 0){
-			flyPos = 0;
-		}
-		if(flyPos >= WORLD_WIDTH){
-			flyPos = WORLD_WIDTH;
-		}
+		// Move fly based on accelerometer
+		fly.move(game.getInput().getAccelX(), deltaTime);
 		
 		// Increase score
 		score += deltaTime;
@@ -293,7 +271,9 @@ public class GamePlayScreen extends Screen{
 			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
 		}
 		// Draw the fly
-		batcher.drawSprite(flyPos, 64 + flySize, flySize, flySize, MainAssets.fly);
+		batcher.drawSprite(fly.getPosition(),
+				fly.getFlySize() + fly.getYPosition(),
+				fly.getFlySize(), fly.getFlySize(), MainAssets.fly);
 		
 		// Draw rottens
 		for(Rotten r : rottens){
