@@ -29,6 +29,12 @@ public class RottenManager {
 		rottencounter = 0;
 	}
 	
+	/**
+	 * <p>updates the positions of the rottens and adds a new one if necessary</p>
+	 * 
+	 * @param deltaTime time since last update
+	 * @param pace speed modifier
+	 */
 	public void update(float deltaTime, int pace){
 		rottencounter += deltaTime * pace;
 		if(rottencounter >= 5){
@@ -41,6 +47,12 @@ public class RottenManager {
 		}
 	}
 	
+	/**
+	 * does a bounds check to see if the fly has hit any rottens
+	 * 
+	 * @param fly
+	 * @return number of rottens eaten
+	 */
 	public int eaten(PlayerFly fly){
 		int eaten = 0;
 		ArrayList<Rotten> rottens2 = new ArrayList<Rotten>();
@@ -60,6 +72,10 @@ public class RottenManager {
 		return eaten;
 	}
 	
+	/**
+	 * <p> lets rendering code access individual rottens
+	 * @return ArrayList of the individual Rottens
+	 */
 	public ArrayList<Rotten> getRottens(){
 		return rottens;
 	}

@@ -10,6 +10,7 @@ import com.andrewjrowell.fly.entities.PlayerFly;
 import com.andrewjrowell.fly.entities.Powerup;
 import com.andrewjrowell.fly.entities.Predator;
 import com.andrewjrowell.fly.entities.Rotten;
+import com.andrewjrowell.fly.entities.RottenManager;
 import com.andrewjrowell.framework.Game;
 import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.diskio.HighScores;
@@ -41,7 +42,7 @@ public class GamePlayScreen extends Screen{
 	Vector2 touchPos = new Vector2(); // Stores the position last touched
 	Camera2D camera;
 	SpriteBatcher batcher;
-	ArrayList<Rotten> rottens; // Fly food
+	RottenManager rottens; // Food
 	ArrayList<Predator> predators;
 	ArrayList<Powerup> powerups;
 	PlayerFly fly;
@@ -51,7 +52,7 @@ public class GamePlayScreen extends Screen{
 	float offset;
 	
 	// Countdowns for various types of entities to appear
-	float rottencounter, predatorcounter, powerupcounter;
+	float predatorcounter, powerupcounter;
 	
 	// Frequency of predators spawning
 	float predfreq;
@@ -73,10 +74,9 @@ public class GamePlayScreen extends Screen{
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
-		rottens = new ArrayList<Rotten>();
 		predators = new ArrayList<Predator>();
 		powerups = new ArrayList<Powerup>();
-		rottencounter = 0;
+		rottens = new RottenManager(WORLD_WIDTH,WORLD_HEIGHT);
 		powerupcounter = 20;
 		fly = new PlayerFly(WORLD_WIDTH);
 		score = 0;
@@ -127,33 +127,8 @@ public class GamePlayScreen extends Screen{
 			}
 		}
 		
-		// Spawn a rotten every 10 seconds
-		rottencounter += deltaTime * (pace/32.0);
-		if(rottencounter >= 9){
-			rottens.add(new Rotten(WORLD_WIDTH, WORLD_HEIGHT));
-			rottencounter = 0;
-		}
-		
-		for(Rotten r : rottens){
-			r.update(deltaTime, pace);
-		}
-		
-		ArrayList<Rotten> rottens2 = new ArrayList<Rotten>();
-		
-		for(Rotten r : rottens){
-			if(OverlapTester.overlapRectangles(
-					fly.getBounds(),
-					new Rectangle(r.x - 16, r.y - 16, 32, 32))){
-				r.eaten = true;
-				fly.grow();
-				MainAssets.slurp.play(1.0f);
-				score += 10;
-			} else {
-				rottens2.add(r);
-			}
-		}
-		rottens = rottens2;
-		
+		rottens.update(deltaTime, pace);
+		score += 10 * rottens.eaten(fly);
 
 		// Spawn predator if it's time for one
 		predatorcounter += deltaTime * (pace/32.0);
@@ -276,7 +251,7 @@ public class GamePlayScreen extends Screen{
 				fly.getFlySize(), fly.getFlySize(), MainAssets.fly);
 		
 		// Draw rottens
-		for(Rotten r : rottens){
+		for(Rotten r : rottens.getRottens()){
 			switch(r.type){
 			case 1: batcher.drawSprite(r.x, r.y, 32, 32, MainAssets.rotten1); break;
 			case 2: batcher.drawSprite(r.x, r.y, 32, 32, MainAssets.rotten2); break;
