@@ -21,7 +21,6 @@ import com.andrewjrowell.framework.gl.SpriteBatcher;
 import com.andrewjrowell.framework.input.Input.TouchEvent;
 import com.andrewjrowell.framework.math.Circle;
 import com.andrewjrowell.framework.math.OverlapTester;
-import com.andrewjrowell.framework.math.Rectangle;
 import com.andrewjrowell.framework.math.Vector2;
 
 /**
