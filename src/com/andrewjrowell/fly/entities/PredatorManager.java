@@ -61,7 +61,7 @@ public class PredatorManager {
 	 * predators</p>
 	 * 
 	 * @param fly Player's Fly
-	 * @return number of rottens eaten
+	 * @return true if eaten by predator
 	 */
 	public boolean collisionCheck(PlayerFly fly) {
 		for(Predator p : predators){
@@ -85,8 +85,8 @@ public class PredatorManager {
 	}
 	
 	/**
-	 * <p> lets rendering code access individual rottens
-	 * @return ArrayList of the individual Rottens
+	 * <p> lets rendering code access individual predators</p>
+	 * @return ArrayList of the individual predators
 	 */
 	public ArrayList<Predator> getPredators(){
 		return predators;

@@ -10,14 +10,6 @@ package com.andrewjrowell.fly.entities;
 
 public class Powerup {
 	
-	//TODO move POWERUP_IDs to an enumeration
-	//TODO factor speed into movement, along with game's pace
-	public final static int POWERUP_ID_SPEED = 1;
-	
-	//TODO associate duration with POWERUP_ID's
-	//How long the powerup affects gameplay
-	public final static int POWERUP_DURATION = 10; 
-	
 	//TODO create getters and setters for this class
 	public float x, y; // Position of powerup on screen
 	public int type;

@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.andrewjrowell.fly.assets.MainAssets;
 import com.andrewjrowell.fly.entities.PlayerFly;
 import com.andrewjrowell.fly.entities.Powerup;
+import com.andrewjrowell.fly.entities.PowerupManager;
 import com.andrewjrowell.fly.entities.Predator;
 import com.andrewjrowell.fly.entities.PredatorManager;
 import com.andrewjrowell.fly.entities.Rotten;
@@ -44,23 +45,15 @@ public class GamePlayScreen extends Screen{
 	SpriteBatcher batcher;
 	RottenManager rottens; // Food
 	PredatorManager predators;
-	ArrayList<Powerup> powerups;
+	PowerupManager powerups;
 	PlayerFly fly;
 	
 	// How much we need to shift the background to give the
 	// appearance of constantly scrolling grass
 	float offset;
 	
-	// Countdowns for various types of entities to appear
-	float powerupcounter;
-	
+	// Player's score in game
 	float score;
-	
-	// What kind of powerup is currently active
-	int powerupState;
-	
-	// Time until powerup expires
-	float powerupTimeLeft;
 			
 	public GamePlayScreen(Game game) {
 		super(game);
@@ -71,14 +64,11 @@ public class GamePlayScreen extends Screen{
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
-		powerups = new ArrayList<Powerup>();
 		rottens = new RottenManager(WORLD_WIDTH,WORLD_HEIGHT);
 		predators = new PredatorManager(WORLD_WIDTH,WORLD_HEIGHT);
-		powerupcounter = 20;
+		powerups = new PowerupManager(WORLD_WIDTH,WORLD_HEIGHT);
 		fly = new PlayerFly(WORLD_WIDTH);
 		score = 0;
-		powerupState = 0; // No powerup currently active
-		powerupTimeLeft = 0;
 		
 		HighScores.load(game.getFileIO());
 		MainAssets.introchords.play(1.0f);
@@ -95,7 +85,7 @@ public class GamePlayScreen extends Screen{
 		int pace; // How fast we move forwards
 		// in pixels per second
 		
-		if(powerupState == Powerup.POWERUP_ID_SPEED){
+		if(powerups.getState() == PowerupManager.SPEED_ID){
 			pace = 128;
 		} else {
 			pace = 48;
@@ -136,50 +126,14 @@ public class GamePlayScreen extends Screen{
 			}
 		}		
 		
-		ArrayList<Powerup> powerups2 = new ArrayList<Powerup>();
-		for(Powerup p : powerups){
-			p.update(deltaTime, pace);
-		}
-		
-		for(Powerup p : powerups){
-			if(p.type == 1 && OverlapTester.overlapCircleRectangle(
-					new Circle(p.x, p.y, 28),
-					fly.getBounds())){
-				powerupState = Powerup.POWERUP_ID_SPEED;
-				powerupTimeLeft = Powerup.POWERUP_DURATION;
-				MainAssets.reloadSpeedSound();
-				MainAssets.speed.play();
-				p.remove = true;
-			}
-		}
-		
-		for(Powerup p : powerups){
-			if(p.remove != true){
-				powerups2.add(p);
-			}
-		}
-		
-		powerups = powerups2;
+		powerups.update(deltaTime, pace);
+		powerups.checkCollisions(fly);
 		
 		// Move fly based on accelerometer
 		fly.move(game.getInput().getAccelX(), deltaTime);
 		
 		// Increase score
 		score += deltaTime;
-		
-		// Decrease powerup time
-		powerupTimeLeft -= deltaTime;
-		if(powerupTimeLeft <= 0){
-			powerupState = 0;
-		}
-		
-		// Spawn a powerup every 30 seconds
-		powerupcounter += deltaTime;
-		if(powerupcounter >= 30){
-			Powerup pu = new Powerup(WORLD_WIDTH, WORLD_HEIGHT);
-			powerups.add(pu);
-			powerupcounter = 0;
-		}
 	}
 	
 	/**
@@ -239,9 +193,10 @@ public class GamePlayScreen extends Screen{
 		}
 		
 		// Draw powerups
-		for(Powerup p : powerups){
+		for(Powerup p : powerups.getPowerups()){
 			switch(p.type){
-			case Powerup.POWERUP_ID_SPEED: batcher.drawSprite(p.x, p.y, 32, 32, MainAssets.speedpowerup); break;
+				case PowerupManager.SPEED_ID: batcher.drawSprite(p.x,
+						p.y, 32, 32, MainAssets.speedpowerup); break;
 			}
 		}
 		
@@ -332,9 +287,11 @@ public class GamePlayScreen extends Screen{
 		}
 		
 		//Draw Powerup Bar
-		if(powerupState != 0){
+		if(powerups.getState() != powerups.ID_NULL){
 			batcher.drawLLSprite(0, (int) (WORLD_HEIGHT - 32), (int) WORLD_WIDTH, 32, MainAssets.widered);
-			batcher.drawLLSprite((int) (WORLD_WIDTH * (powerupTimeLeft / Powerup.POWERUP_DURATION)) , (int) (WORLD_HEIGHT - 32.0),
+			batcher.drawLLSprite(
+				(int) (WORLD_WIDTH * (powerups.getPercentLeft())) ,
+				(int) (WORLD_HEIGHT - 32.0),
 				(int) WORLD_WIDTH, 32, MainAssets.widewhite);
 		}
 		
