@@ -151,6 +151,7 @@ public class MainAssets {
 	public static Sound tiltright;
 	public static Sound tiltleft;
 	public static Music speed;
+	public static Music slow;
 	public static Sound crunch;
 	
 	/**
@@ -175,6 +176,7 @@ public class MainAssets {
 		tiltright = audio.newSound("goingup.wav");
 		tiltleft = audio.newSound("goingdown.wav");
 		speed = audio.newMusic("speedsound.wav");
+		slow = audio.newMusic("slowsound.wav");
 		crunch = audio.newSound("crunch.wav");
 		
 		speedpowerup = new TextureRegion(imagemap,0,544,32,32);
@@ -331,6 +333,7 @@ public class MainAssets {
 		tiltright = audio.newSound("goingup.wav");
 		tiltleft = audio.newSound("goingdown.wav");
 		speed = audio.newMusic("speedsound.wav");
+		slow = audio.newMusic("slowsound.wav");
 		crunch = audio.newSound("crunch.wav");
 	}
 
@@ -340,5 +343,9 @@ public class MainAssets {
 	 */
 	public static void reloadSpeedSound() {
 		speed = audio.newMusic("speedsound.wav");
+	}
+
+	public static void reloadSlowSound() {
+		slow = audio.newMusic("slowsound.wav");
 	}
 }

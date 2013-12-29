@@ -107,8 +107,8 @@ public class PowerupManager {
 				powerupState = PowerupManager.SLOW_ID;
 				powerupTimeLeft = PowerupManager.SLOW_DURATION;
 				powerupDuration = PowerupManager.SLOW_DURATION;
-				//MainAssets.reloadSpeedSound();
-				//MainAssets.speed.play();
+				MainAssets.reloadSlowSound();
+				MainAssets.slow.play();
 				p.remove = true;
 			}
 		}
