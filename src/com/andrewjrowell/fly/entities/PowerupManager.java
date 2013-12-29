@@ -18,8 +18,10 @@ public class PowerupManager {
 
 	public static final int ID_NULL = 0;
 	public static final int SPEED_ID = 1;
+	public static final int SLOW_ID = 2;
 	
 	public static final int SPEED_DURATION = 10;
+	public static final int SLOW_DURATION = 20;
 	
 	final float WORLD_WIDTH;
 	final float WORLD_HEIGHT;
@@ -66,13 +68,14 @@ public class PowerupManager {
 		// Decrease powerup time
 		powerupTimeLeft -= deltaTime;
 		if(powerupTimeLeft <= 0){
-			powerupState = 0;
+			powerupState = ID_NULL;
 		}
 				
 		// Spawn a powerup every 30 seconds
 		powerupcounter += deltaTime;
 		if(powerupcounter >= 30){
-			Powerup pu = new Powerup(WORLD_WIDTH, WORLD_HEIGHT);
+			int newid = (int) (Math.random() * 2) + 1;
+			Powerup pu = new Powerup(WORLD_WIDTH, WORLD_HEIGHT, newid);
 			powerups.add(pu);
 			powerupcounter = 0;
 		}
@@ -88,7 +91,7 @@ public class PowerupManager {
 		ArrayList<Powerup> powerups2 = new ArrayList<Powerup>();
 		
 		for(Powerup p : powerups){
-			if(p.type == 1 && OverlapTester.overlapCircleRectangle(
+			if(p.type == SPEED_ID && OverlapTester.overlapCircleRectangle(
 					new Circle(p.x, p.y, 28),
 					fly.getBounds())){
 				powerupState = PowerupManager.SPEED_ID;
@@ -96,6 +99,16 @@ public class PowerupManager {
 				powerupDuration = PowerupManager.SPEED_DURATION;
 				MainAssets.reloadSpeedSound();
 				MainAssets.speed.play();
+				p.remove = true;
+			}
+			if(p.type == SLOW_ID && OverlapTester.overlapCircleRectangle(
+					new Circle(p.x, p.y, 28),
+					fly.getBounds())){
+				powerupState = PowerupManager.SLOW_ID;
+				powerupTimeLeft = PowerupManager.SLOW_DURATION;
+				powerupDuration = PowerupManager.SLOW_DURATION;
+				//MainAssets.reloadSpeedSound();
+				//MainAssets.speed.play();
 				p.remove = true;
 			}
 		}

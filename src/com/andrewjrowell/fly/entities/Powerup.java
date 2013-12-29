@@ -22,9 +22,10 @@ public class Powerup {
 	 * 
 	 * @param WORLD_WIDTH Width of the game world in pixels
 	 * @param WORLD_HEIGHT Height of the game world in pixels
+	 * @param id 
 	 */
-	public Powerup(float WORLD_WIDTH, float WORLD_HEIGHT){
-		type = 1;
+	public Powerup(float WORLD_WIDTH, float WORLD_HEIGHT, int id){
+		type = id;
 		
 		// Set the powerup's inital position to a random point
 		// at the top of the screen

@@ -87,6 +87,8 @@ public class GamePlayScreen extends Screen{
 		
 		if(powerups.getState() == PowerupManager.SPEED_ID){
 			pace = 128;
+		} else if (powerups.getState() == PowerupManager.SLOW_ID){
+			pace = 16;
 		} else {
 			pace = 48;
 		}
@@ -197,6 +199,8 @@ public class GamePlayScreen extends Screen{
 			switch(p.type){
 				case PowerupManager.SPEED_ID: batcher.drawSprite(p.x,
 						p.y, 32, 32, MainAssets.speedpowerup); break;
+				case PowerupManager.SLOW_ID: batcher.drawSprite(p.x,
+						p.y, 32, 32, MainAssets.slowpowerup); break;
 			}
 		}
 		
@@ -287,7 +291,7 @@ public class GamePlayScreen extends Screen{
 		}
 		
 		//Draw Powerup Bar
-		if(powerups.getState() != powerups.ID_NULL){
+		if(powerups.getState() != PowerupManager.ID_NULL){
 			batcher.drawLLSprite(0, (int) (WORLD_HEIGHT - 32), (int) WORLD_WIDTH, 32, MainAssets.widered);
 			batcher.drawLLSprite(
 				(int) (WORLD_WIDTH * (powerups.getPercentLeft())) ,

@@ -41,6 +41,7 @@ public class MainAssets {
 	public static TextureRegion duck;
 	
 	public static TextureRegion speedpowerup;
+	public static TextureRegion slowpowerup;
 	
 	public static TextureRegion rotten1;
 	public static TextureRegion rotten2;
@@ -177,6 +178,7 @@ public class MainAssets {
 		crunch = audio.newSound("crunch.wav");
 		
 		speedpowerup = new TextureRegion(imagemap,0,544,32,32);
+		slowpowerup = new TextureRegion(imagemap,32,544,32,32);
 		
 		 A = new TextureRegion(imagemap, 0, 0 , 48, 64);
 		 B = new TextureRegion(imagemap, 48, 0 , 48, 64);
