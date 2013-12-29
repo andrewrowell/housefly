@@ -37,10 +37,11 @@ public class PredatorManager {
 	 * one if necessary</p>
 	 * 
 	 * @param deltaTime time since last update
-	 * @param pace speed modifier
+	 * @param xpace lateral speed modifier
+	 * @param ypace vertical speed modifier
 	 */
-	public void update(float deltaTime, float pace){
-		counter += deltaTime * pace / 48;
+	public void update(float deltaTime, float xpace, float ypace){
+		counter += deltaTime * ypace / 48;
 		// Divide by 48 so at normal pace, counter
 		// represents time in seconds
 		
@@ -52,7 +53,7 @@ public class PredatorManager {
 		}
 		
 		for(Predator p : predators){
-			p.update(deltaTime, pace);
+			p.update(deltaTime, xpace, ypace);
 		}
 	}
 

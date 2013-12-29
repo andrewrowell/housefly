@@ -82,19 +82,24 @@ public class GamePlayScreen extends Screen{
 	 */
 	@Override
 	public void update(float deltaTime) {
-		float pace; // How fast we move forwards
-		// in pixels per second
+		
+		// Paces are in pixels per second
+		float xpace; // How fast we move forwards
+		float ypace; // Affects lateral movement speeds
 		
 		if(powerups.getState() == PowerupManager.SPEED_ID){
-			pace = 128;
+			xpace = 48;
+			ypace = 128;
 		} else if (powerups.getState() == PowerupManager.SLOW_ID){
-			pace = 16;
+			xpace = 8;
+			ypace = 32;
 		} else {
-			pace = 48;
+			xpace = 48;
+			ypace = 48;
 		}
 		
 		//Move background
-		offset += pace * deltaTime;
+		offset += ypace * deltaTime;
 		if(offset >= 320){
 			offset = 0;
 		}
@@ -111,12 +116,12 @@ public class GamePlayScreen extends Screen{
 		}
 		
 		// Update the rottens
-		rottens.update(deltaTime, pace);
+		rottens.update(deltaTime, ypace);
 		// Check to see how many rottens were eaten
 		score += 10 * rottens.eaten(fly);
 
 		// update predators
-		predators.update(deltaTime, pace);
+		predators.update(deltaTime, xpace, ypace);
 		// Check for collisions with predators
 		if(predators.collisionCheck(fly)){
 			MainAssets.speed.stop();
@@ -128,7 +133,7 @@ public class GamePlayScreen extends Screen{
 			}
 		}		
 		
-		powerups.update(deltaTime, pace);
+		powerups.update(deltaTime, ypace);
 		powerups.checkCollisions(fly);
 		
 		// Move fly based on accelerometer

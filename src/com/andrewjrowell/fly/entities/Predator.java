@@ -91,10 +91,11 @@ public class Predator {
 	 * Update the position of the Predator
 	 * 
 	 * @param deltaTime time since last update()
-	 * @param pace modifies the speed that the predator moves
+	 * @param xpace lateral speed modifier
+	 * @param ypace vertical speed modifier
 	 */
-	public void update(float deltaTime, float pace){
-		y -= deltaTime * pace;
+	public void update(float deltaTime, float xpace, float ypace){
+		y -= deltaTime * ypace;
 		if(type == 1){
 			if(x <= 0){
 				direction = true;
@@ -104,9 +105,9 @@ public class Predator {
 			}
 		
 			if(direction){
-				x += deltaTime * 32;
+				x += deltaTime * xpace;
 			} else {
-				x -= deltaTime * 32;
+				x -= deltaTime * xpace;
 			}
 		}
 		if(type == 2){
@@ -118,9 +119,9 @@ public class Predator {
 			}
 		
 			if(direction){
-				x += deltaTime * 32 / 2;
+				x += deltaTime * xpace / 2;
 			} else {
-				x -= deltaTime * 32 / 2;
+				x -= deltaTime * xpace / 2;
 			}
 		}
 		if(type == 3){
@@ -132,9 +133,9 @@ public class Predator {
 			}
 		
 			if(direction){
-				x += deltaTime * 32 / 4;
+				x += deltaTime * ypace / 4;
 			} else {
-				x -= deltaTime * 32 / 4;
+				x -= deltaTime * ypace / 4;
 			}
 		}
 	}
