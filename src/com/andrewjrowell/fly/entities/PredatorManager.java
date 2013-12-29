@@ -39,7 +39,7 @@ public class PredatorManager {
 	 * @param deltaTime time since last update
 	 * @param pace speed modifier
 	 */
-	public void update(float deltaTime, int pace){
+	public void update(float deltaTime, float pace){
 		counter += deltaTime * pace / 48;
 		// Divide by 48 so at normal pace, counter
 		// represents time in seconds

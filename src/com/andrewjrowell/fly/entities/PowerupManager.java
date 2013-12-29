@@ -58,7 +58,7 @@ public class PowerupManager {
 	 * @param deltaTime time since last update
 	 * @param pace speed modifier
 	 */
-	public void update(float deltaTime, int pace){
+	public void update(float deltaTime, float pace){
 		for(Powerup p : powerups){
 			p.update(deltaTime, pace);
 		}

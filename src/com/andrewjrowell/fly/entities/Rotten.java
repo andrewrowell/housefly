@@ -35,7 +35,7 @@ public class Rotten {
 	 * @param deltaTime time since last updat()
 	 * @param pace affects the speed at which the rotten moves down
 	 */
-	public void update(float deltaTime, int pace){
+	public void update(float deltaTime, float pace){
 		y -= deltaTime * pace;
 	}
 }
