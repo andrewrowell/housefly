@@ -137,10 +137,17 @@ public class GamePlayScreen extends Screen{
 		powerups.checkCollisions(fly);
 		
 		// Move fly based on accelerometer
-		fly.move(game.getInput().getAccelX(), deltaTime);
+		if(powerups.getState() == PowerupManager.SWITCHDIR_ID){
+			fly.move(-1 * game.getInput().getAccelX(), deltaTime);
+		} else {
+			fly.move(game.getInput().getAccelX(), deltaTime);
+		}
 		
 		// Increase score
 		score += deltaTime;
+		if(powerups.getState() == PowerupManager.SWITCHDIR_ID){
+			score += deltaTime * 2;
+		}
 	}
 	
 	/**
@@ -206,6 +213,8 @@ public class GamePlayScreen extends Screen{
 						p.y, 32, 32, MainAssets.speedpowerup); break;
 				case PowerupManager.SLOW_ID: batcher.drawSprite(p.x,
 						p.y, 32, 32, MainAssets.slowpowerup); break;
+				case PowerupManager.SWITCHDIR_ID: batcher.drawSprite(p.x,
+						p.y, 32, 32, MainAssets.switchdirpowerup); break;
 			}
 		}
 		

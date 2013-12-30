@@ -42,6 +42,7 @@ public class MainAssets {
 	
 	public static TextureRegion speedpowerup;
 	public static TextureRegion slowpowerup;
+	public static TextureRegion switchdirpowerup;
 	
 	public static TextureRegion rotten1;
 	public static TextureRegion rotten2;
@@ -152,6 +153,7 @@ public class MainAssets {
 	public static Sound tiltleft;
 	public static Music speed;
 	public static Music slow;
+	public static Music switchdir;
 	public static Sound crunch;
 	
 	/**
@@ -177,10 +179,12 @@ public class MainAssets {
 		tiltleft = audio.newSound("goingdown.wav");
 		speed = audio.newMusic("speedsound.wav");
 		slow = audio.newMusic("slowsound.wav");
+		switchdir = audio.newMusic("switchdirsound.wav");
 		crunch = audio.newSound("crunch.wav");
 		
 		speedpowerup = new TextureRegion(imagemap,0,544,32,32);
 		slowpowerup = new TextureRegion(imagemap,32,544,32,32);
+		switchdirpowerup = new TextureRegion(imagemap,64,544,32,32);
 		
 		 A = new TextureRegion(imagemap, 0, 0 , 48, 64);
 		 B = new TextureRegion(imagemap, 48, 0 , 48, 64);
@@ -334,6 +338,7 @@ public class MainAssets {
 		tiltleft = audio.newSound("goingdown.wav");
 		speed = audio.newMusic("speedsound.wav");
 		slow = audio.newMusic("slowsound.wav");
+		switchdir = audio.newMusic("switchdirsound.wav");
 		crunch = audio.newSound("crunch.wav");
 	}
 
@@ -347,5 +352,9 @@ public class MainAssets {
 
 	public static void reloadSlowSound() {
 		slow = audio.newMusic("slowsound.wav");
+	}
+	
+	public static void reloadSwitchDirSound(){
+		switchdir = audio.newMusic("switchdirsound.wav");
 	}
 }

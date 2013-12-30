@@ -19,9 +19,11 @@ public class PowerupManager {
 	public static final int ID_NULL = 0;
 	public static final int SPEED_ID = 1;
 	public static final int SLOW_ID = 2;
+	public static final int SWITCHDIR_ID = 3;
 	
-	public static final int SPEED_DURATION = 10;
+	public static final int SPEED_DURATION = 20;
 	public static final int SLOW_DURATION = 20;
+	public static final int SWITCHDIR_DURATION = 30;
 	
 	final float WORLD_WIDTH;
 	final float WORLD_HEIGHT;
@@ -74,7 +76,7 @@ public class PowerupManager {
 		// Spawn a powerup every 30 seconds
 		powerupcounter += deltaTime;
 		if(powerupcounter >= 30){
-			int newid = (int) (Math.random() * 2) + 1;
+			int newid = (int) (Math.random() * 3) + 1;
 			Powerup pu = new Powerup(WORLD_WIDTH, WORLD_HEIGHT, newid);
 			powerups.add(pu);
 			powerupcounter = 0;
@@ -109,6 +111,16 @@ public class PowerupManager {
 				powerupDuration = PowerupManager.SLOW_DURATION;
 				MainAssets.reloadSlowSound();
 				MainAssets.slow.play();
+				p.remove = true;
+			}
+			if(p.type == SWITCHDIR_ID && OverlapTester.overlapCircleRectangle(
+					new Circle(p.x, p.y, 28),
+					fly.getBounds())){
+				powerupState = PowerupManager.SWITCHDIR_ID;
+				powerupTimeLeft = PowerupManager.SWITCHDIR_DURATION;
+				powerupDuration = PowerupManager.SWITCHDIR_DURATION;
+				MainAssets.reloadSwitchDirSound();
+				MainAssets.switchdir.play();
 				p.remove = true;
 			}
 		}

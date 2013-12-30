@@ -22,7 +22,7 @@ public class Powerup {
 	 * 
 	 * @param WORLD_WIDTH Width of the game world in pixels
 	 * @param WORLD_HEIGHT Height of the game world in pixels
-	 * @param id 
+	 * @param id unique number to identify type of powerup
 	 */
 	public Powerup(float WORLD_WIDTH, float WORLD_HEIGHT, int id){
 		type = id;
