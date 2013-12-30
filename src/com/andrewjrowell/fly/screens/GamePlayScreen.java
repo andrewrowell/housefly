@@ -34,8 +34,8 @@ import com.andrewjrowell.framework.math.Vector2;
 
 
 public class GamePlayScreen extends Screen{
-	final float WORLD_WIDTH = 320.0f;
-	final float WORLD_HEIGHT = 480.0f;
+	final float WORLD_WIDTH;
+	final float WORLD_HEIGHT;
 	final static int TEXTX = 48; // Width of bitmap font
 	final static int TEXTY = 64; // Height of bitmap font
 	GLGraphics glGraphics;
@@ -55,8 +55,10 @@ public class GamePlayScreen extends Screen{
 	// Player's score in game
 	float score;
 			
-	public GamePlayScreen(Game game) {
+	public GamePlayScreen(Game game, float worldwidth, float worldheight) {
 		super(game);
+		WORLD_WIDTH = worldwidth;
+		WORLD_HEIGHT = worldheight;
 		glGraphics = ((GLGame)game).getGLGraphics();
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
@@ -127,9 +129,9 @@ public class GamePlayScreen extends Screen{
 			MainAssets.speed.stop();
 			MainAssets.crunch.play(1.0f);
 			if(HighScores.isHighScore((int) score)){
-				game.setScreen(new EnterHighScoreScreen(game, (int) score));
+				game.setScreen(new EnterHighScoreScreen(game, (int) score, WORLD_WIDTH, WORLD_HEIGHT));
 			} else {
-				game.setScreen(new NoHighScoreScreen(game));
+				game.setScreen(new NoHighScoreScreen(game, WORLD_WIDTH, WORLD_HEIGHT));
 			}
 		}		
 		

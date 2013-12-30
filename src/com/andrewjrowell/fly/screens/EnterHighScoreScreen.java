@@ -30,8 +30,8 @@ import com.andrewjrowell.framework.math.Vector2;
 
 
 public class EnterHighScoreScreen extends Screen{
-	final float WORLD_WIDTH = 320.0f;
-	final float WORLD_HEIGHT = 480.0f;
+	final float WORLD_WIDTH;
+	final float WORLD_HEIGHT;
 	final static int TEXTX = 48; // Width of the bitmap font
 	final static int TEXTY = 64; // Height of the bitmap font
 	GLGraphics glGraphics;
@@ -59,8 +59,10 @@ public class EnterHighScoreScreen extends Screen{
 	 * @param game {@link Game} object passed from previous screen 
 	 * @param score Score earned by player in GamePlayScreen
 	 */
-	public EnterHighScoreScreen(Game game, int score) {
+	public EnterHighScoreScreen(Game game, int score, float worldwidth, float worldheight) {
 		super(game);
+		WORLD_WIDTH = worldwidth;
+		WORLD_HEIGHT = worldheight;
 		this.score = score;
 		glGraphics = ((GLGame)game).getGLGraphics();
 		
@@ -146,7 +148,7 @@ public class EnterHighScoreScreen extends Screen{
 					MainAssets.click.play(1.0f);
 					HighScores.addHighScore(score, name);
 					HighScores.save(game.getFileIO());
-					game.setScreen(new ViewHighScoreScreen(game));
+					game.setScreen(new ViewHighScoreScreen(game, WORLD_WIDTH, WORLD_HEIGHT));
 				}
 			}
 		}

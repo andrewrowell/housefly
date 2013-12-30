@@ -30,6 +30,8 @@ import com.andrewjrowell.framework.gl.GLGame;
 
 public class MainActivity extends GLGame {
 	boolean firstTimeCreate = true;
+	final float WORLD_WIDTH = 320.0f;
+	final float WORLD_HEIGHT = 480.0f;
 	
 	
 	/**
@@ -45,7 +47,7 @@ public class MainActivity extends GLGame {
 	 */
 	@Override
 	public Screen getStartScreen() {
-		return new LoadingScreen(this);
+		return new LoadingScreen(this, WORLD_WIDTH, WORLD_HEIGHT);
 	}
 
 	/**

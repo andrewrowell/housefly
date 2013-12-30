@@ -24,8 +24,8 @@ import com.andrewjrowell.framework.math.Vector2;
 */
 
 public class NoHighScoreScreen extends Screen{
-	final float WORLD_WIDTH = 320.0f;
-	final float WORLD_HEIGHT = 480.0f;
+	final float WORLD_WIDTH;
+	final float WORLD_HEIGHT;
 	final static int TEXTX = 48; // Width of bitmap font
 	final static int TEXTY = 64; // Height of bitmap font
 	GLGraphics glGraphics;
@@ -39,8 +39,10 @@ public class NoHighScoreScreen extends Screen{
 	// appearance of constantly scrolling grass
 	float offset;
 				
-	public NoHighScoreScreen(Game game) {
+	public NoHighScoreScreen(Game game, float worldwidth, float worldheight) {
 		super(game);
+		WORLD_WIDTH = worldwidth;
+		WORLD_HEIGHT = worldheight;
 		glGraphics = ((GLGame)game).getGLGraphics();
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
@@ -80,11 +82,11 @@ public class NoHighScoreScreen extends Screen{
 			if(event.type == TouchEvent.TOUCH_UP){
 				if(OverlapTester.pointInRectangle(noBounds, touchPos)){
 					MainAssets.click.play(1.0f);
-					game.setScreen(new MainScreen(game));
+					game.setScreen(new MainScreen(game, WORLD_WIDTH, WORLD_HEIGHT));
 				}
 				if(OverlapTester.pointInRectangle(yesBounds, touchPos)){
 					MainAssets.click.play(1.0f);
-					game.setScreen(new GamePlayScreen(game));
+					game.setScreen(new GamePlayScreen(game, WORLD_WIDTH, WORLD_HEIGHT));
 				}
 			}
 		}

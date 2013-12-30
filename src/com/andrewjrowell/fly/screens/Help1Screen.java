@@ -35,8 +35,8 @@ import com.andrewjrowell.framework.math.Vector2;
 
 
 public class Help1Screen extends Screen{
-	final float WORLD_WIDTH = 320.0f;
-	final float WORLD_HEIGHT = 480.0f;
+	final float WORLD_WIDTH;
+	final float WORLD_HEIGHT;
 	final static int TEXTX = 48; // Width of the bitmap font
 	final static int TEXTY = 64; // Height of the bitmap font
 	GLGraphics glGraphics;
@@ -60,8 +60,10 @@ public class Help1Screen extends Screen{
 	 * 
 	 * @param game {@link Game} object passed from {@link MainScreen}
 	 */
-	public Help1Screen(Game game) {
+	public Help1Screen(Game game, float worldwidth, float worldheight) {
 		super(game);
+		WORLD_WIDTH = worldwidth;
+		WORLD_HEIGHT = worldheight;
 		glGraphics = ((GLGame)game).getGLGraphics();
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
@@ -120,7 +122,7 @@ public class Help1Screen extends Screen{
 				// See if player touched the "next screen" button
 				if(OverlapTester.pointInRectangle(nextBounds, touchPos)){
 					MainAssets.click.play(1.0f);
-					game.setScreen(new Help2Screen(game));
+					game.setScreen(new Help2Screen(game, WORLD_WIDTH, WORLD_HEIGHT));
 				}
 			}
 		}

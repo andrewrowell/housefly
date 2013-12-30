@@ -26,8 +26,8 @@ import com.andrewjrowell.framework.math.Vector2;
 */
 
 public class LoadingScreen extends Screen{
-	final float WORLD_WIDTH = 320.0f;
-	final float WORLD_HEIGHT = 480.0f;
+	final float WORLD_WIDTH;
+	final float WORLD_HEIGHT;
 	GLGraphics glGraphics;
 
 	Vector2 touchPos = new Vector2();
@@ -37,8 +37,16 @@ public class LoadingScreen extends Screen{
 	
 	boolean loadingStarted = false;
 			
-	public LoadingScreen(Game game) {
+	/**
+	 * 
+	 * @param game
+	 * @param worldwidth width of game world in pixels
+	 * @param worldheight height of game world in pixels
+	 */
+	public LoadingScreen(Game game, float worldwidth, float worldheight) {
 		super(game);
+		WORLD_WIDTH = worldwidth;
+		WORLD_HEIGHT = worldheight;
 		glGraphics = ((GLGame)game).getGLGraphics();
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
@@ -66,7 +74,7 @@ public class LoadingScreen extends Screen{
 		game.getInput().getKeyEvents();
 		if(MainAssets.isLoaded()){
 			MainAssets.reload();
-			game.setScreen(new MainScreen(game));
+			game.setScreen(new MainScreen(game, WORLD_WIDTH, WORLD_HEIGHT));
 		}
 	}
 	
