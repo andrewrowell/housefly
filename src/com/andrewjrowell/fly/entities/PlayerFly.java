@@ -13,15 +13,15 @@ import com.andrewjrowell.framework.math.Rectangle;
 
 public class PlayerFly {
 	
-	final float WORLD_WIDTH; // width of game world in pixels
+	final float WORLD_WIDTH = 320; // width of game world in pixels
+	final float WORLD_HEIGHT = 480; // height of game world in pixels
 	final int FLY_Y_POSITION = 64; // distance from bottom of world
 	
 	float flyPosition; // X Position of fly
 	int flySize; // size of fly in pixels
 	boolean buzzing; // should buzzing sound be playing?
 	
-	public PlayerFly(float worldwidth){
-		WORLD_WIDTH = worldwidth;
+	public PlayerFly(){
 		flyPosition = WORLD_WIDTH / 2;
 		flySize = 16;
 		buzzing = false;
@@ -94,7 +94,7 @@ public class PlayerFly {
 	 * @return fly's distance from the bottom of the game world
 	 */
 	public float getYPosition(){
-		return FLY_Y_POSITION;
+		return (float) (FLY_Y_POSITION + flySize * WORLD_HEIGHT / 480.0);
 	}
 	
 	/**

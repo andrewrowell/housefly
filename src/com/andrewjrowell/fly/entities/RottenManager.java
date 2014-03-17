@@ -15,16 +15,14 @@ import com.andrewjrowell.framework.math.Rectangle;
  */
 
 public class RottenManager {
-	final float WORLD_WIDTH;
-	final float WORLD_HEIGHT;
+	final float WORLD_WIDTH = 320; // width of game world in pixels
+	final float WORLD_HEIGHT = 480; // height of game world in pixels
 	
 	float rottencounter; // Timer for spawning another rotten
 	
 	ArrayList<Rotten> rottens;
 	
-	public RottenManager(float worldwidth, float worldheight){
-		WORLD_WIDTH = worldwidth;
-		WORLD_HEIGHT = worldheight;
+	public RottenManager(){
 		rottens = new ArrayList<Rotten>();
 		rottencounter = 0;
 	}
@@ -37,7 +35,7 @@ public class RottenManager {
 	 * @param pace speed modifier
 	 */
 	public void update(float deltaTime, float pace){
-		rottencounter += deltaTime * pace / 48;
+		rottencounter += deltaTime * pace / 48.0;
 		// Divide by 48 so at normal pace, counter
 		// represents time in seconds
 		
@@ -64,7 +62,8 @@ public class RottenManager {
 		for(Rotten r : rottens){
 			if(OverlapTester.overlapRectangles(
 					fly.getBounds(),
-					new Rectangle(r.x - 16, r.y - 16, 32, 32))){
+					new Rectangle(r.x - (int)(16.0 * WORLD_WIDTH/320.0), r.y - (int)(16.0 * WORLD_HEIGHT/480.0),
+							(int)(32.0 * WORLD_WIDTH/320.0), (int)(32.0 * WORLD_HEIGHT/480.0)))){
 				r.eaten = true;
 				fly.grow();
 				MainAssets.slurp.play(1.0f);

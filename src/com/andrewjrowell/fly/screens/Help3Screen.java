@@ -5,6 +5,8 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.fly.bitmapfonts.BigFont;
+import com.andrewjrowell.framework.CoordinateConverter;
 import com.andrewjrowell.framework.Game;
 import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.gl.Camera2D;
@@ -34,8 +36,9 @@ import com.andrewjrowell.framework.math.Vector2;
 public class Help3Screen extends Screen{
 	final float WORLD_WIDTH;
 	final float WORLD_HEIGHT;
-	final static int TEXTX = 48; // Width of bitmap font
-	final static int TEXTY = 64; // Height of bitmap font
+	BigFont bigfont;
+	CoordinateConverter cc;
+	
 	GLGraphics glGraphics;
 
 	Vector2 touchPos = new Vector2(); // Stores the position last touched
@@ -60,13 +63,24 @@ public class Help3Screen extends Screen{
 		super(game);
 		WORLD_WIDTH = worldwidth;
 		WORLD_HEIGHT = worldheight;
+		bigfont = new BigFont(WORLD_WIDTH, WORLD_HEIGHT);
+		cc = new CoordinateConverter(WORLD_WIDTH, WORLD_HEIGHT);
+		
 		glGraphics = ((GLGame)game).getGLGraphics();
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
 		batcher = new SpriteBatcher(glGraphics, 500);
-		nextBounds = new Rectangle(96, 0, 128, 64);
-		textBounds = new Rectangle(88, 384, 144, 64);
-		textBounds2 = new Rectangle(64, 96, 192, 64);
+		nextBounds = new Rectangle(cc.xcon(96),
+				0, cc.xcon(128),
+				cc.ycon(64));
+		textBounds = new Rectangle(cc.xcon(88),
+				cc.ycon(384),
+				cc.xcon(144),
+				cc.ycon(64));
+		textBounds2 = new Rectangle(cc.xcon(64),
+				cc.ycon(96),
+				cc.xcon(192),
+				cc.ycon(64));
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
@@ -82,7 +96,7 @@ public class Help3Screen extends Screen{
 	public void update(float deltaTime) {
 		
 		// Shift Background
-		offset += 32 * deltaTime;
+		offset += 32.0 * deltaTime;
 		if(offset >= 320){
 			offset = 0;
 		}
@@ -106,7 +120,7 @@ public class Help3Screen extends Screen{
 		}
 		
 		// Shift the rotten
-		food_y -= 32 * deltaTime;
+		food_y -= 32.0 * deltaTime;
 		
 		// If the rotten has moved down to the fly's position
 		// Don't move it any further, and subtract from the
@@ -142,8 +156,10 @@ public class Help3Screen extends Screen{
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		batcher.beginBatch(MainAssets.imagemap);
 		
+		// Draw the background
 		for(int j = 0; j < 4; j++){
-			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
+			batcher.drawLLSprite(0, (int) cc.ycon((j * 320.0f - offset)),
+			(int)WORLD_WIDTH, cc.ycon(320), MainAssets.background);
 		}
 		
 		batcher.drawLLSprite((int) nextBounds.lowerLeft.x,(int) nextBounds.lowerLeft.y,
@@ -151,26 +167,36 @@ public class Help3Screen extends Screen{
 		batcher.drawLLSprite((int) textBounds.lowerLeft.x,(int) textBounds.lowerLeft.y,
 				(int)textBounds.width,(int) textBounds.height, MainAssets.white);
 		
-		batcher.drawLLSprite(88, 384, TEXTX, TEXTY, MainAssets.E);
-		batcher.drawLLSprite(88 + TEXTX, 384, TEXTX, TEXTY, MainAssets.A);
-		batcher.drawLLSprite(88 + 2 * TEXTX, 384, TEXTX, TEXTY, MainAssets.T);
+		bigfont.drawString(cc.xcon(88),
+				cc.ycon(384), "EAT", batcher);
 		
 		// Don't draw the rotten if it has reached the fly
-		if(food_y > 192 + 32){
-			batcher.drawSprite(160,food_y,32,32,MainAssets.rotten1);
-			batcher.drawSprite(160,192,32,32,MainAssets.fly);
+		if(food_y > (192.0 + 32.0)){
+			batcher.drawSprite(cc.xcon(160),
+					cc.ycon(food_y),
+					cc.xcon(32),
+					cc.ycon(32),
+					MainAssets.rotten1);
+			batcher.drawSprite(cc.xcon(160),
+					cc.ycon(192),
+					cc.xcon(32),
+					cc.ycon(32),
+					MainAssets.fly);
 		} else {
 			batcher.drawLLSprite((int) textBounds2.lowerLeft.x,(int) textBounds2.lowerLeft.y,
 					(int)textBounds2.width,(int) textBounds2.height, MainAssets.white);
-			batcher.drawLLSprite(64, 96, TEXTX, TEXTY, MainAssets.G);
-			batcher.drawLLSprite(64 + TEXTX, 96, TEXTX, TEXTY, MainAssets.R);
-			batcher.drawLLSprite(64 + 2 * TEXTX, 96, TEXTX, TEXTY, MainAssets.O);
-			batcher.drawLLSprite(64 + 3 * TEXTX, 96, TEXTX, TEXTY, MainAssets.W);
-			batcher.drawSprite(160,192,32 + (32 * (3 - resetcountdown) / 3),
-					32 + (32 * (3 - resetcountdown) / 3),MainAssets.fly);
+			bigfont.drawString(cc.xcon(64),
+					cc.ycon(96), "GROW", batcher);
+			batcher.drawSprite(cc.xcon(160),
+					cc.ycon(192),
+					(int) cc.xcon((32.0 + (32.0 * (3.0 - resetcountdown) / 3.0))),
+					(int) cc.ycon((32.0 + (32.0 * (3.0 - resetcountdown) / 3.0))),
+					MainAssets.fly);
 		}
 		
-		batcher.drawLLSprite(96, 0, 128, 64, MainAssets.arrow);
+		batcher.drawLLSprite(cc.xcon(96),
+				0, cc.xcon(128),
+				cc.ycon(64), MainAssets.arrow);
 		
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);

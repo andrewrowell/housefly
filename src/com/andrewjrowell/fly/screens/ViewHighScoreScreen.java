@@ -3,7 +3,10 @@ package com.andrewjrowell.fly.screens;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
+
 import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.fly.bitmapfonts.BigFont;
+import com.andrewjrowell.framework.CoordinateConverter;
 import com.andrewjrowell.framework.Game;
 import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.diskio.HighScores;
@@ -26,8 +29,9 @@ import com.andrewjrowell.framework.math.Vector2;
 public class ViewHighScoreScreen extends Screen{
 	final float WORLD_WIDTH;
 	final float WORLD_HEIGHT;
-	final static int TEXTX = 48; // Width of bitmap font
-	final static int TEXTY = 64; // Height of bitmap font
+	BigFont bigfont;
+	CoordinateConverter cc;
+	
 	GLGraphics glGraphics;
 
 	Vector2 touchPos = new Vector2(); // Stores the position last touched
@@ -44,13 +48,15 @@ public class ViewHighScoreScreen extends Screen{
 		WORLD_WIDTH = worldwidth;
 		WORLD_HEIGHT = worldheight;
 		glGraphics = ((GLGame)game).getGLGraphics();
+		bigfont = new BigFont(WORLD_WIDTH, WORLD_HEIGHT);
+		cc = new CoordinateConverter(worldwidth, worldheight);
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
 		batcher = new SpriteBatcher(glGraphics, 500);
-		nextBounds = new Rectangle(96, 0, 128, 64);
-		textBounds = new Rectangle(16, 320, 288, 128);
-		scoreBounds = new Rectangle(32,128, 160, 160);
-		nameBounds = new Rectangle(192, 128, 96, 160);
+		nextBounds = new Rectangle(cc.xcon(96), 0, cc.xcon(128), cc.ycon(64));
+		textBounds = new Rectangle(cc.xcon(16), cc.ycon(320), cc.xcon(288), cc.ycon(128));
+		scoreBounds = new Rectangle(cc.xcon(32), cc.ycon(128), cc.xcon(160), cc.ycon(160));
+		nameBounds = new Rectangle(cc.xcon(192), cc.ycon(128), cc.xcon(96), cc.ycon(160));
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
@@ -108,7 +114,8 @@ public class ViewHighScoreScreen extends Screen{
 		batcher.beginBatch(MainAssets.imagemap);
 		
 		for(int j = 0; j < 4; j++){
-			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
+			batcher.drawLLSprite(0, (int) cc.ycon(j * 320.0f - offset),
+					cc.xcon(320),cc.ycon(320), MainAssets.background);
 		}
 		
 		batcher.drawLLSprite((int) nextBounds.lowerLeft.x,(int) nextBounds.lowerLeft.y,
@@ -119,23 +126,15 @@ public class ViewHighScoreScreen extends Screen{
 				(int)scoreBounds.width,(int) scoreBounds.height, MainAssets.white);
 		batcher.drawLLSprite((int) nameBounds.lowerLeft.x,(int) nameBounds.lowerLeft.y,
 				(int)nameBounds.width,(int) nameBounds.height, MainAssets.tallred);
-		
-		batcher.drawLLSprite(64, 384, TEXTX, TEXTY, MainAssets.H);
-		batcher.drawLLSprite(64 + TEXTX, 384, TEXTX, TEXTY, MainAssets.I);
-		batcher.drawLLSprite(64 + 2 * TEXTX, 384, TEXTX, TEXTY, MainAssets.G);
-		batcher.drawLLSprite(64 + 3 * TEXTX, 384, TEXTX, TEXTY, MainAssets.H);
-		batcher.drawLLSprite(16, 320, TEXTX, TEXTY, MainAssets.S);
-		batcher.drawLLSprite(16 + TEXTX, 320, TEXTX, TEXTY, MainAssets.C);
-		batcher.drawLLSprite(16 + 2 * TEXTX, 320, TEXTX, TEXTY, MainAssets.O);
-		batcher.drawLLSprite(16 + 3 * TEXTX, 320, TEXTX, TEXTY, MainAssets.R);
-		batcher.drawLLSprite(16 + 4 * TEXTX, 320, TEXTX, TEXTY, MainAssets.E);
-		batcher.drawLLSprite(16 + 5 * TEXTX, 320, TEXTX, TEXTY, MainAssets.S);
+
+		bigfont.drawString(cc.xcon(64),cc.ycon(384), "HIGH", batcher);	
+		bigfont.drawString(cc.xcon(16),cc.ycon(320), "SCORES", batcher);	
 		
 		for(int i = 0; i < 5; i++){
-			drawScore(i,32,32 * (8-i));
+			drawScore(i,cc.xcon(32),cc.ycon(32 * (8-i)));
 		}
 		
-		batcher.drawLLSprite(96, 0, 128, 64, MainAssets.arrow);
+		batcher.drawLLSprite(cc.xcon(96), 0, cc.xcon(128), cc.ycon(64), MainAssets.arrow);
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);
 	}
@@ -160,12 +159,11 @@ public class ViewHighScoreScreen extends Screen{
 		int digit5 = (int) Math.floor(tscore / 1);
 		tscore -= (digit5 * 1);
 		drawDigit(x,y,digit1);
-		drawDigit(x + 32,y,digit2);
-		drawDigit(x + 64,y,digit3);
-		drawDigit(x + 96,y,digit4);
-		drawDigit(x + 128,y,digit5);
-		drawName(x + 160,y,HighScores.names[scoreindex]);
-		//draw name
+		drawDigit(x + cc.xcon(32),y,digit2);
+		drawDigit(x + cc.xcon(64),y,digit3);
+		drawDigit(x + cc.xcon(96),y,digit4);
+		drawDigit(x + cc.xcon(128),y,digit5);
+		drawName(x + cc.xcon(160),y,HighScores.names[scoreindex]);
 	}
 	
 	/**
@@ -177,16 +175,16 @@ public class ViewHighScoreScreen extends Screen{
 	 */
 	private void drawDigit(int x, int y, int digit){
 		switch(digit){
-		case 1: batcher.drawLLSprite(x, y, 32, 32, MainAssets.one); break;
-		case 2: batcher.drawLLSprite(x, y, 32, 32, MainAssets.two); break;
-		case 3: batcher.drawLLSprite(x, y, 32, 32, MainAssets.three); break;
-		case 4: batcher.drawLLSprite(x, y, 32, 32, MainAssets.four); break;
-		case 5: batcher.drawLLSprite(x, y, 32, 32, MainAssets.five); break;
-		case 6: batcher.drawLLSprite(x, y, 32, 32, MainAssets.six); break;
-		case 7: batcher.drawLLSprite(x, y, 32, 32, MainAssets.seven); break;
-		case 8: batcher.drawLLSprite(x, y, 32, 32, MainAssets.eight); break;
-		case 9: batcher.drawLLSprite(x, y, 32, 32, MainAssets.nine); break;
-		case 0: batcher.drawLLSprite(x, y, 32, 32, MainAssets.zero); break;
+		case 1: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.one); break;
+		case 2: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.two); break;
+		case 3: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.three); break;
+		case 4: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.four); break;
+		case 5: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.five); break;
+		case 6: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.six); break;
+		case 7: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.seven); break;
+		case 8: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.eight); break;
+		case 9: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.nine); break;
+		case 0: batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.zero); break;
 		}
 	}
 	
@@ -199,8 +197,8 @@ public class ViewHighScoreScreen extends Screen{
 	 */
 	private void drawName(int x, int y, String name){
 		drawChar(x, y, name.charAt(0));
-		drawChar(x + 32, y, name.charAt(1));
-		drawChar(x + 64, y, name.charAt(2));
+		drawChar(x + cc.xcon(32), y, name.charAt(1));
+		drawChar(x + cc.xcon(64), y, name.charAt(2));
 	}
 	
 	/**
@@ -211,32 +209,32 @@ public class ViewHighScoreScreen extends Screen{
 	 */
 	private void drawChar(int x, int y, char c){
 		switch(c){
-		case 'A': batcher.drawLLSprite(x, y, 32, 32, MainAssets.a); break;
-		case 'B': batcher.drawLLSprite(x, y, 32, 32, MainAssets.b); break;
-		case 'C': batcher.drawLLSprite(x, y, 32, 32, MainAssets.c); break;
-		case 'D': batcher.drawLLSprite(x, y, 32, 32, MainAssets.d); break;
-		case 'E': batcher.drawLLSprite(x, y, 32, 32, MainAssets.e); break;
-		case 'F': batcher.drawLLSprite(x, y, 32, 32, MainAssets.f); break;
-		case 'G': batcher.drawLLSprite(x, y, 32, 32, MainAssets.g); break;
-		case 'H': batcher.drawLLSprite(x, y, 32, 32, MainAssets.h); break;
-		case 'I': batcher.drawLLSprite(x, y, 32, 32, MainAssets.i); break;
-		case 'J': batcher.drawLLSprite(x, y, 32, 32, MainAssets.j); break;
-		case 'K': batcher.drawLLSprite(x, y, 32, 32, MainAssets.k); break;
-		case 'L': batcher.drawLLSprite(x, y, 32, 32, MainAssets.l); break;
-		case 'M': batcher.drawLLSprite(x, y, 32, 32, MainAssets.m); break;
-		case 'N': batcher.drawLLSprite(x, y, 32, 32, MainAssets.n); break;
-		case 'O': batcher.drawLLSprite(x, y, 32, 32, MainAssets.o); break;
-		case 'P': batcher.drawLLSprite(x, y, 32, 32, MainAssets.p); break;
-		case 'Q': batcher.drawLLSprite(x, y, 32, 32, MainAssets.q); break;
-		case 'R': batcher.drawLLSprite(x, y, 32, 32, MainAssets.r); break;
-		case 'S': batcher.drawLLSprite(x, y, 32, 32, MainAssets.s); break;
-		case 'T': batcher.drawLLSprite(x, y, 32, 32, MainAssets.t); break;
-		case 'U': batcher.drawLLSprite(x, y, 32, 32, MainAssets.u); break;
-		case 'V': batcher.drawLLSprite(x, y, 32, 32, MainAssets.v); break;
-		case 'W': batcher.drawLLSprite(x, y, 32, 32, MainAssets.w); break;
-		case 'X': batcher.drawLLSprite(x, y, 32, 32, MainAssets.x); break;
-		case 'Y': batcher.drawLLSprite(x, y, 32, 32, MainAssets.y); break;
-		case 'Z': batcher.drawLLSprite(x, y, 32, 32, MainAssets.z); break;
+		case 'A': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.a); break;
+		case 'B': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.b); break;
+		case 'C': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.c); break;
+		case 'D': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.d); break;
+		case 'E': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.e); break;
+		case 'F': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.f); break;
+		case 'G': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.g); break;
+		case 'H': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.h); break;
+		case 'I': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.i); break;
+		case 'J': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.j); break;
+		case 'K': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.k); break;
+		case 'L': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.l); break;
+		case 'M': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.m); break;
+		case 'N': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.n); break;
+		case 'O': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.o); break;
+		case 'P': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.p); break;
+		case 'Q': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.q); break;
+		case 'R': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.r); break;
+		case 'S': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.s); break;
+		case 'T': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.t); break;
+		case 'U': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.u); break;
+		case 'V': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.v); break;
+		case 'W': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.w); break;
+		case 'X': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.x); break;
+		case 'Y': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.y); break;
+		case 'Z': batcher.drawLLSprite(x, y, cc.xcon(32), cc.ycon(32), MainAssets.z); break;
 		}
 	}
 	

@@ -5,6 +5,8 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.fly.bitmapfonts.BigFont;
+import com.andrewjrowell.framework.CoordinateConverter;
 import com.andrewjrowell.framework.Game;
 import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.gl.Camera2D;
@@ -33,8 +35,9 @@ import com.andrewjrowell.framework.math.Vector2;
 public class Help2Screen extends Screen{
 	final float WORLD_WIDTH;
 	final float WORLD_HEIGHT;
-	final static int TEXTX = 48; // Width of the bitmap font
-	final static int TEXTY = 64; // Height of the bitmap font
+	BigFont bigfont;
+	CoordinateConverter cc;
+	
 	GLGraphics glGraphics;
 
 	Vector2 touchPos = new Vector2(); // Stores the position last touched
@@ -52,23 +55,30 @@ public class Help2Screen extends Screen{
 		super(game);
 		WORLD_WIDTH = worldwidth;
 		WORLD_HEIGHT = worldheight;
+		bigfont = new BigFont(WORLD_WIDTH, WORLD_HEIGHT);
+		cc = new CoordinateConverter(worldwidth, worldheight);
+		
 		glGraphics = ((GLGame)game).getGLGraphics();
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
 		batcher = new SpriteBatcher(glGraphics, 500);
-		nextBounds = new Rectangle(96, 0, 128, 64);
-		textBounds = new Rectangle(40, 384, 240, 64);
+		nextBounds = new Rectangle(cc.xcon(96), 0,
+				cc.xcon(128),cc.ycon(64));
+		textBounds = new Rectangle(cc.xcon(40),
+				cc.ycon(384),
+				cc.xcon(240),
+				cc.ycon(64));
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
 		
 		// This next section makes the creatures scroll in from the right side,
 		// one at a time
-		spider_x = WORLD_WIDTH; // Put spider on right edge of world
-		lizard_x = spider_x + WORLD_WIDTH / 2; // Put lizard a bit further to
+		spider_x = 320; // Put spider on right edge of world
+		lizard_x = spider_x + 320 / 2; // Put lizard a bit further to
 											   // the right off screen
 		//TODO rename lizard to bat
-		duck_x = spider_x + WORLD_WIDTH; // Put duck even further to the right
+		duck_x = spider_x + 320 + 32; // Put duck even further to the right
 	}
 	
 	/** update status of various elements of the Help2Screen
@@ -79,7 +89,7 @@ public class Help2Screen extends Screen{
 	public void update(float deltaTime) {
 		
 		// Shift Background
-		offset += 32 * deltaTime;
+		offset += 32.0 * deltaTime;
 		if(offset >= 320){
 			offset = 0;
 		}
@@ -103,20 +113,20 @@ public class Help2Screen extends Screen{
 		}
 		
 		// Shift predators
-		spider_x -= 64 * deltaTime;
+		spider_x -= 64.0 * deltaTime;
 		lizard_x -= 64 * deltaTime;
-		duck_x -= 64 * deltaTime;
+		duck_x -= 64.0 * deltaTime;
 		
 		// If a predator has gone off of the screen,
 		// put them on the other side
 		if(spider_x < -96){
-			spider_x = WORLD_WIDTH + 96;
+			spider_x = 320 + 96;
 		}
 		if(lizard_x < -96){
-			lizard_x = WORLD_WIDTH + 96;
+			lizard_x = 320 + 96;
 		}
 		if(duck_x < -96){
-			duck_x = WORLD_WIDTH + 96;
+			duck_x = 320 + 96;
 		}
 	}
 	
@@ -138,7 +148,8 @@ public class Help2Screen extends Screen{
 		
 		// Draw the background
 		for(int j = 0; j < 4; j++){
-			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
+			batcher.drawLLSprite(0, (int) cc.ycon((j * 320.0f - offset)),
+			(int)WORLD_WIDTH, cc.ycon(320), MainAssets.background);
 		}
 		
 		batcher.drawLLSprite((int) nextBounds.lowerLeft.x,(int) nextBounds.lowerLeft.y,
@@ -146,17 +157,22 @@ public class Help2Screen extends Screen{
 		batcher.drawLLSprite((int) textBounds.lowerLeft.x,(int) textBounds.lowerLeft.y,
 				(int)textBounds.width,(int) textBounds.height, MainAssets.white);
 		
-		batcher.drawLLSprite(40, 384, TEXTX, TEXTY, MainAssets.A);
-		batcher.drawLLSprite(40 + TEXTX, 384, TEXTX, TEXTY, MainAssets.V);
-		batcher.drawLLSprite(40 + 2 * TEXTX, 384, TEXTX, TEXTY, MainAssets.O);
-		batcher.drawLLSprite(40 + 3 * TEXTX, 384, TEXTX, TEXTY, MainAssets.I);
-		batcher.drawLLSprite(40 + 4 * TEXTX, 384, TEXTX, TEXTY, MainAssets.D);
+		bigfont.drawString(cc.xcon(40),
+				cc.ycon(384), "AVOID", batcher);
 		
-		batcher.drawSprite(spider_x, 224, 64, 64, MainAssets.spider);
-		batcher.drawSprite(lizard_x, 224, 128, 128, MainAssets.lizard);
-		batcher.drawSprite(duck_x, 224, 192, 192, MainAssets.duck);
+		batcher.drawSprite(cc.xcon(spider_x), cc.ycon(224),
+				cc.xcon(64),
+				cc.ycon(64), MainAssets.spider);
+		batcher.drawSprite(cc.xcon(lizard_x), cc.ycon(224),
+				cc.xcon(128),
+				cc.ycon(128), MainAssets.lizard);
+		batcher.drawSprite(cc.xcon(duck_x), cc.ycon(224),
+				cc.xcon(192),
+				cc.ycon(192), MainAssets.duck);
 		
-		batcher.drawLLSprite(96, 0, 128, 64, MainAssets.arrow);
+		batcher.drawLLSprite(cc.xcon(96),
+				0, cc.xcon(128),
+				cc.ycon(64), MainAssets.arrow);
 		
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);

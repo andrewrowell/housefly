@@ -21,12 +21,12 @@ public class PowerupManager {
 	public static final int SLOW_ID = 2;
 	public static final int SWITCHDIR_ID = 3;
 	
-	public static final int SPEED_DURATION = 20;
-	public static final int SLOW_DURATION = 20;
-	public static final int SWITCHDIR_DURATION = 30;
+	public static final int SPEED_DURATION = 10;
+	public static final int SLOW_DURATION = 15;
+	public static final int SWITCHDIR_DURATION = 10;
 	
-	final float WORLD_WIDTH;
-	final float WORLD_HEIGHT;
+	final float WORLD_WIDTH = 320; // width of game world in pixels
+	final float WORLD_HEIGHT = 480; // height of game world in pixels
 	
 	ArrayList<Powerup> powerups;
 	
@@ -36,9 +36,7 @@ public class PowerupManager {
 	float powerupTimeLeft; // Time until powerup expires
 	float powerupDuration; // Length of currently active powerup
 	
-	public PowerupManager(float worldwidth, float worldheight){
-		WORLD_WIDTH = worldwidth;
-		WORLD_HEIGHT = worldheight;
+	public PowerupManager(){
 		powerups = new ArrayList<Powerup>();
 		powerupcounter = 20;
 		powerupState = ID_NULL;
@@ -74,7 +72,7 @@ public class PowerupManager {
 		}
 				
 		// Spawn a powerup every 30 seconds
-		powerupcounter += deltaTime;
+		powerupcounter += deltaTime * pace / 48f;
 		if(powerupcounter >= 30){
 			int newid = (int) (Math.random() * 3) + 1;
 			Powerup pu = new Powerup(WORLD_WIDTH, WORLD_HEIGHT, newid);
@@ -94,7 +92,7 @@ public class PowerupManager {
 		
 		for(Powerup p : powerups){
 			if(p.type == SPEED_ID && OverlapTester.overlapCircleRectangle(
-					new Circle(p.x, p.y, 28),
+					new Circle(p.x, p.y, (int) (WORLD_WIDTH * 28.0 / 320.0)),
 					fly.getBounds())){
 				powerupState = PowerupManager.SPEED_ID;
 				powerupTimeLeft = PowerupManager.SPEED_DURATION;
@@ -114,7 +112,7 @@ public class PowerupManager {
 				p.remove = true;
 			}
 			if(p.type == SWITCHDIR_ID && OverlapTester.overlapCircleRectangle(
-					new Circle(p.x, p.y, 28),
+					new Circle(p.x, p.y, (28)),
 					fly.getBounds())){
 				powerupState = PowerupManager.SWITCHDIR_ID;
 				powerupTimeLeft = PowerupManager.SWITCHDIR_DURATION;

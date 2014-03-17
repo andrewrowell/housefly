@@ -5,6 +5,8 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.fly.bitmapfonts.BigFont;
+import com.andrewjrowell.framework.CoordinateConverter;
 import com.andrewjrowell.framework.Game;
 import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.gl.Camera2D;
@@ -26,8 +28,9 @@ import com.andrewjrowell.framework.math.Vector2;
 public class NoHighScoreScreen extends Screen{
 	final float WORLD_WIDTH;
 	final float WORLD_HEIGHT;
-	final static int TEXTX = 48; // Width of bitmap font
-	final static int TEXTY = 64; // Height of bitmap font
+	BigFont bigfont;
+	CoordinateConverter cc;
+	
 	GLGraphics glGraphics;
 
 	Vector2 touchPos = new Vector2(); // Stores the position last touched
@@ -43,14 +46,16 @@ public class NoHighScoreScreen extends Screen{
 		super(game);
 		WORLD_WIDTH = worldwidth;
 		WORLD_HEIGHT = worldheight;
+		bigfont = new BigFont(WORLD_WIDTH, WORLD_HEIGHT);
 		glGraphics = ((GLGame)game).getGLGraphics();
+		cc = new CoordinateConverter(worldwidth,worldheight);
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
 		batcher = new SpriteBatcher(glGraphics, 500);
-		noHighScoreBounds = new Rectangle(40, 256, 240, 192);
-		tryAgainBounds = new Rectangle(8, 96, 304, 128);
-		yesBounds = new Rectangle(0, 0, 144, 64);
-		noBounds = new Rectangle(216, 0, 136, 64);
+		noHighScoreBounds = new Rectangle(cc.xcon(40), cc.ycon(256), cc.xcon(240), cc.ycon(192));
+		tryAgainBounds = new Rectangle(cc.xcon(8), cc.ycon(96), cc.xcon(304), cc.ycon(128));
+		yesBounds = new Rectangle(0, 0, cc.xcon(144), cc.ycon(64));
+		noBounds = new Rectangle(cc.xcon(216), 0, cc.xcon(136), cc.ycon(64));
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
@@ -109,7 +114,7 @@ public class NoHighScoreScreen extends Screen{
 		batcher.beginBatch(MainAssets.imagemap);
 		
 		for(int j = 0; j < 4; j++){
-			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
+			batcher.drawLLSprite(0, (int) cc.ycon(j * 320.0f - offset),cc.xcon(320),cc.ycon(320), MainAssets.background);
 		}
 		
 		batcher.drawLLSprite((int) noHighScoreBounds.lowerLeft.x,(int) noHighScoreBounds.lowerLeft.y,
@@ -121,34 +126,15 @@ public class NoHighScoreScreen extends Screen{
 		batcher.drawLLSprite((int) noBounds.lowerLeft.x,(int) noBounds.lowerLeft.y,
 				(int)noBounds.width,(int) noBounds.height, MainAssets.white);
 		
-		batcher.drawLLSprite(0, 0, TEXTX, TEXTY, MainAssets.Y);
-		batcher.drawLLSprite(0 + TEXTX, 0, TEXTX, TEXTY, MainAssets.E);
-		batcher.drawLLSprite(0 + 2 * TEXTX, 0, TEXTX, TEXTY, MainAssets.S);
+		bigfont.drawString(0,0, "YES", batcher);
+		bigfont.drawString(cc.xcon(224),0, "NO", batcher);
 		
-		batcher.drawLLSprite(224, 0, TEXTX, TEXTY, MainAssets.N);
-		batcher.drawLLSprite(224 + TEXTX, 0, TEXTX, TEXTY, MainAssets.O);
+		bigfont.drawString(cc.xcon(112),cc.ycon(384), "NO", batcher);	
+		bigfont.drawString(cc.xcon(64),cc.ycon(320), "HIGH", batcher);
+		bigfont.drawString(cc.xcon(40),cc.ycon(256), "SCORE", batcher);
 		
-		batcher.drawLLSprite(112, 384, TEXTX, TEXTY, MainAssets.N);
-		batcher.drawLLSprite(112 + TEXTX, 384, TEXTX, TEXTY, MainAssets.O);
-		batcher.drawLLSprite(64, 320, TEXTX, TEXTY, MainAssets.H);
-		batcher.drawLLSprite(64 + TEXTX, 320, TEXTX, TEXTY, MainAssets.I);
-		batcher.drawLLSprite(64 + 2 * TEXTX, 320, TEXTX, TEXTY, MainAssets.G);
-		batcher.drawLLSprite(64 + 3 * TEXTX, 320, TEXTX, TEXTY, MainAssets.H);
-		batcher.drawLLSprite(40, 256, TEXTX, TEXTY, MainAssets.S);
-		batcher.drawLLSprite(40 + TEXTX, 256, TEXTX, TEXTY, MainAssets.C);
-		batcher.drawLLSprite(40 + 2 * TEXTX, 256, TEXTX, TEXTY, MainAssets.O);
-		batcher.drawLLSprite(40 + 3 * TEXTX, 256, TEXTX, TEXTY, MainAssets.R);
-		batcher.drawLLSprite(40 + 4 * TEXTX, 256, TEXTX, TEXTY, MainAssets.E);
-		
-		batcher.drawLLSprite(88, 160, TEXTX, TEXTY, MainAssets.T);
-		batcher.drawLLSprite(88 + TEXTX, 160, TEXTX, TEXTY, MainAssets.R);
-		batcher.drawLLSprite(88 + 2 * TEXTX, 160, TEXTX, TEXTY, MainAssets.Y);
-		batcher.drawLLSprite(16, 96, TEXTX, TEXTY, MainAssets.A);
-		batcher.drawLLSprite(16 + TEXTX, 96, TEXTX, TEXTY, MainAssets.G);
-		batcher.drawLLSprite(16 + 2 * TEXTX, 96, TEXTX, TEXTY, MainAssets.A);
-		batcher.drawLLSprite(16 + 3 * TEXTX, 96, TEXTX, TEXTY, MainAssets.I);
-		batcher.drawLLSprite(16 + 4 * TEXTX, 96, TEXTX, TEXTY, MainAssets.N);
-		batcher.drawLLSprite(16 + 5 * TEXTX, 96, TEXTX, TEXTY, MainAssets.QUESTION_MARK);
+		bigfont.drawString(cc.xcon(88),cc.ycon(160), "TRY", batcher);
+		bigfont.drawString(cc.xcon(16),cc.ycon(96), "AGAIN?", batcher);
 				
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);

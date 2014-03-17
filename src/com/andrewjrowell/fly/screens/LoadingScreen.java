@@ -95,7 +95,7 @@ public class LoadingScreen extends Screen{
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		batcher.beginBatch(PreAssets.imagemap);
 		
-		batcher.drawLLSprite(0, 0, 320,480, PreAssets.background);
+		batcher.drawLLSprite(0, 0, (int) WORLD_WIDTH,(int) WORLD_HEIGHT, PreAssets.background);
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);
 	}

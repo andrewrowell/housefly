@@ -30,7 +30,7 @@ public class Powerup {
 		// Set the powerup's inital position to a random point
 		// at the top of the screen
 		x = (int) (Math.random() * (WORLD_WIDTH - 32)) + 16;
-		y = WORLD_HEIGHT;
+		y = 480;
 		
 		remove = false;
 	}

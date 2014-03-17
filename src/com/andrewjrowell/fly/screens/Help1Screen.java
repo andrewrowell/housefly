@@ -5,6 +5,8 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.andrewjrowell.fly.assets.MainAssets;
+import com.andrewjrowell.fly.bitmapfonts.BigFont;
+import com.andrewjrowell.framework.CoordinateConverter;
 import com.andrewjrowell.framework.Game;
 import com.andrewjrowell.framework.Screen;
 import com.andrewjrowell.framework.gl.Camera2D;
@@ -37,8 +39,9 @@ import com.andrewjrowell.framework.math.Vector2;
 public class Help1Screen extends Screen{
 	final float WORLD_WIDTH;
 	final float WORLD_HEIGHT;
-	final static int TEXTX = 48; // Width of the bitmap font
-	final static int TEXTY = 64; // Height of the bitmap font
+	BigFont bigfont;
+	CoordinateConverter cc;
+	
 	GLGraphics glGraphics;
 
 	Vector2 touchPos = new Vector2(); // Stores the position last touched
@@ -64,16 +67,19 @@ public class Help1Screen extends Screen{
 		super(game);
 		WORLD_WIDTH = worldwidth;
 		WORLD_HEIGHT = worldheight;
+		bigfont = new BigFont(WORLD_WIDTH, WORLD_HEIGHT);
+		cc = new CoordinateConverter(worldwidth, worldheight);
+		
 		glGraphics = ((GLGame)game).getGLGraphics();
 		
 		camera = new Camera2D(glGraphics, WORLD_WIDTH, WORLD_HEIGHT);
 		batcher = new SpriteBatcher(glGraphics, 500);
-		nextBounds = new Rectangle(96, 0, 128, 64);
-		textBounds = new Rectangle(64, 384, 192, 64);
+		nextBounds = new Rectangle(cc.xcon(96), 0, cc.xcon(128),cc.ycon(64));
+		textBounds = new Rectangle(cc.xcon(64),cc.ycon(384),cc.xcon(192),cc.ycon(64));
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
 		offset = 0;
-		fly_x = WORLD_WIDTH / 2; // Place demonstration fly in screen's center
+		fly_x = 320 / 2; // Place demonstration fly in screen's center
 	}
 	
 	/** update status of various elements of the Help1Screen
@@ -83,15 +89,15 @@ public class Help1Screen extends Screen{
 	public void update(float deltaTime) {
 		
 		// Shift background
-		offset += 32 * deltaTime;
+		offset += 32.0 * deltaTime;
 		if(offset >= 320){
 			offset = 0;
 		}
 		
 		// Change the direction of the demonstration fly
 		// if it has reached the edge of the screen
-		if(fly_x >= WORLD_WIDTH && tiltright == true){
-			fly_x = WORLD_WIDTH - 1;
+		if(fly_x >= 320 && tiltright == true){
+			fly_x = 320 - 1;
 			tiltright = false;
 			MainAssets.tiltleft.play(1.0f);
 		}
@@ -103,9 +109,9 @@ public class Help1Screen extends Screen{
 		
 		// Move the fly based on the direction
 		if(tiltright){
-			fly_x += 64 * deltaTime;
+			fly_x += 64.0 * deltaTime;
 		} else {
-			fly_x -= 64 * deltaTime;
+			fly_x -= 64.0 * deltaTime;
 		}
 		
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
@@ -147,28 +153,39 @@ public class Help1Screen extends Screen{
 		
 		// Draw the background
 		for(int j = 0; j < 4; j++){
-			batcher.drawLLSprite(0, (int) (j * 320.0f - offset),320,320, MainAssets.background);
+			batcher.drawLLSprite(0, (int) cc.ycon(j * 320.0f - offset),
+					(int) WORLD_WIDTH, cc.ycon(320), MainAssets.background);
 		}
 		
+		// Draw text backgrounds
 		batcher.drawLLSprite((int) nextBounds.lowerLeft.x,(int) nextBounds.lowerLeft.y,
 				(int)nextBounds.width,(int) nextBounds.height, MainAssets.white);
 		batcher.drawLLSprite((int) textBounds.lowerLeft.x,(int) textBounds.lowerLeft.y,
 				(int)textBounds.width,(int) textBounds.height, MainAssets.white);
 		
-		batcher.drawLLSprite(64, 384, TEXTX, TEXTY, MainAssets.T);
-		batcher.drawLLSprite(64 + TEXTX, 384, TEXTX, TEXTY, MainAssets.I);
-		batcher.drawLLSprite(64 + 2 * TEXTX, 384, TEXTX, TEXTY, MainAssets.L);
-		batcher.drawLLSprite(64 + 3 * TEXTX, 384, TEXTX, TEXTY, MainAssets.T);
+		// Draw "TILT"
+		bigfont.drawString(cc.xcon(64),cc.ycon(384), "TILT", batcher);
 		
-		batcher.drawLLSprite(96, 0, 128, 64, MainAssets.arrow);
+		// Draw next screen arrow
+		batcher.drawLLSprite(cc.xcon(96),0,cc.xcon(128), cc.ycon(64), MainAssets.arrow);
 		
-		if(tiltright == true){
-			batcher.drawSprite(160, 256, 128, 192, 350, MainAssets.phone);
+		// Draw tilted phone
+		/*if(tiltright == true){
+			//batcher.drawSprite(cc.xcon(160), cc.ycon(256),
+			//		cc.xcon(128), cc.ycon(192), 350, MainAssets.phone);
+			batcher.drawSprite(cc.xcon(160), cc.ycon(256),
+					cc.xcon(128), cc.ycon(192), 360 - (10 * (fly_x / 320)), MainAssets.phone);
 		} else {
-			batcher.drawSprite(160, 256, 128, 192, 10, MainAssets.phone);
-		}
+			//batcher.drawSprite(cc.xcon(160), cc.ycon(256),
+			//		cc.xcon(128), cc.ycon(192), 10, MainAssets.phone);
+			batcher.drawSprite(cc.xcon(160), cc.ycon(256),
+					cc.xcon(128), cc.ycon(192), 10 - (10 * (fly_x) / 320), MainAssets.phone);
+		}*/
 		
-		batcher.drawSprite(fly_x, 96, 64, 64, MainAssets.fly);
+		batcher.drawSprite(cc.xcon(160), cc.ycon(256),
+				cc.xcon(128), cc.ycon(192), 20 * ((160 - fly_x)/160), MainAssets.phone);
+		
+		batcher.drawSprite(cc.xcon(fly_x), cc.ycon(96), cc.xcon(64), cc.ycon(64), MainAssets.fly);
 		batcher.endBatch();
 		gl.glDisable(GL10.GL_BLEND);
 	}

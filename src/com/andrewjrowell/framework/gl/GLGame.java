@@ -43,6 +43,9 @@ public abstract class GLGame extends Activity implements Game, Renderer{
 	long startTime = System.nanoTime();
 	WakeLock wakeLock;
 	
+	public static final float WORLD_WIDTH = 320;
+	public static final float WORLD_HEIGHT = 480;
+	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -50,6 +53,8 @@ public abstract class GLGame extends Activity implements Game, Renderer{
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		glView = new GLSurfaceView(this);
 		glView.setRenderer(this);
+		glView.getHolder().setFixedSize((int) WORLD_WIDTH, (int) WORLD_HEIGHT);
+		
 		setContentView(glView);
 		
 		glGraphics = new GLGraphics(glView);

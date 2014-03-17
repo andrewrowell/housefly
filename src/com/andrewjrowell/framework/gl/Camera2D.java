@@ -21,7 +21,8 @@ public class Camera2D {
 	
 	public void setViewportAndMatrices(){
 		GL10 gl = glGraphics.getGL();
-		gl.glViewport(0,0,glGraphics.getWidth(), glGraphics.getHeight());
+		//gl.glViewport(0,0,glGraphics.getWidth(), glGraphics.getHeight());
+		gl.glViewport(0,0,(int) frustrumWidth,(int) frustrumHeight);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glOrthof(position.x - frustrumWidth * zoom / 2,

@@ -71,7 +71,8 @@ public class Texture {
     gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
     width = bitmap.getWidth();
     height = bitmap.getHeight();
-    setFilters(GL10.GL_LINEAR_MIPMAP_NEAREST, GL10.GL_LINEAR);
+    //setFilters(GL10.GL_LINEAR_MIPMAP_NEAREST, GL10.GL_LINEAR);
+    setFilters(GL10.GL_NEAREST, GL10.GL_NEAREST);
 
     int level = 0;
     int newWidth = width;
