@@ -17,6 +17,9 @@ public class PlayerFly {
 	final float WORLD_HEIGHT = 480; // height of game world in pixels
 	final int FLY_Y_POSITION = 64; // distance from bottom of world
 	
+	float MOVE_THRESHOLD = 0.5f; // Minimum absolute amount of tilting to move fly
+								 // - higher means more tilt needed before fly moves
+	
 	float flyPosition; // X Position of fly
 	int flySize; // size of fly in pixels
 	boolean buzzing; // should buzzing sound be playing?
@@ -50,7 +53,7 @@ public class PlayerFly {
 	 * @param deltaTime time passed since last update
 	 */
 	public void move(float variation, float deltaTime){
-		if(Math.abs(variation) > 0.5){
+		if(Math.abs(variation) > MOVE_THRESHOLD){
 			flyPosition -= (int) (variation * deltaTime * 32 * 2);
 			if(!buzzing && Math.abs(variation) > 3){
 				buzzing = true;
@@ -104,5 +107,23 @@ public class PlayerFly {
 	 */
 	public int getFlySize(){
 		return flySize;
+	}
+
+	/**
+	 * 
+	 * @return gets angle that fly should be rotated to
+	 */
+	public float getRotation(float variation, boolean switched) {
+		int inversionFactor;
+		if (switched){
+			inversionFactor = -1;
+		} else {
+			inversionFactor = 1;
+		}
+		if(Math.abs(variation) > MOVE_THRESHOLD){
+			return variation * 15 * inversionFactor;
+		} else {
+			return 0;
+		}
 	}
 }

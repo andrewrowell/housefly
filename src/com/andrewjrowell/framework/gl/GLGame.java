@@ -43,8 +43,8 @@ public abstract class GLGame extends Activity implements Game, Renderer{
 	long startTime = System.nanoTime();
 	WakeLock wakeLock;
 	
-	public static final float WORLD_WIDTH = 320;
-	public static final float WORLD_HEIGHT = 480;
+	public static final float WORLD_WIDTH = 640;
+	public static final float WORLD_HEIGHT = 960;
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);

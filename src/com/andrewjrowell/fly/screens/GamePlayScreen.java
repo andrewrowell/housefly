@@ -180,7 +180,10 @@ public class GamePlayScreen extends Screen{
 		}
 		// Draw the fly
 		batcher.drawSprite(cc.xcon(fly.getPosition()), cc.ycon(fly.getYPosition()),
-				cc.xcon(fly.getFlySize()), cc.ycon(fly.getFlySize()), MainAssets.fly);
+				cc.xcon(fly.getFlySize()), cc.ycon(fly.getFlySize()),
+				fly.getRotation(game.getInput().getAccelX(),
+						(powerups.getState() == PowerupManager.SWITCHDIR_ID)),
+				MainAssets.fly);
 		
 		// Draw rottens
 		for(Rotten r : rottens.getRottens()){
