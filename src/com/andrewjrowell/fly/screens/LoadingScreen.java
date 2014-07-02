@@ -36,7 +36,10 @@ public class LoadingScreen extends Screen{
 	Rectangle nextBounds, textBounds;
 	
 	boolean loadingStarted = false;
-			
+	
+	int timer; // Timer variable ensures that loading screen is seen
+	final int TIMEOUT_LENGTH = 200;
+	
 	/**
 	 * 
 	 * @param game
@@ -53,6 +56,7 @@ public class LoadingScreen extends Screen{
 		batcher = new SpriteBatcher(glGraphics, 500);
 		
 		glGraphics.getGL().glClearColor(1,1,1,1);
+		timer = 0;
 	}
 	
 	
@@ -72,10 +76,11 @@ public class LoadingScreen extends Screen{
 		}
 		game.getInput().getTouchEvents();
 		game.getInput().getKeyEvents();
-		if(MainAssets.isLoaded()){
+		if(MainAssets.isLoaded() && timer >= TIMEOUT_LENGTH){
 			MainAssets.reload();
 			game.setScreen(new MainScreen(game, WORLD_WIDTH, WORLD_HEIGHT));
 		}
+		timer += 1;
 	}
 	
 	
