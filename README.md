@@ -1,4 +1,4 @@
-# housefly
+# Housefly
 
 This is an Android game I developed in high school.
 
